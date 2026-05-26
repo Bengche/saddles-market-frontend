@@ -81,7 +81,7 @@ export default function Footer() {
             </div>
             <form
               onSubmit={handleSubscribe}
-              className="flex gap-3 w-full md:w-auto md:min-w-[400px]"
+              className="flex flex-col gap-3 w-full md:flex-row md:w-auto md:min-w-[400px]"
             >
               <input
                 type="email"
@@ -89,13 +89,13 @@ export default function Footer() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Your email address"
                 disabled={subStatus === "loading" || subStatus === "success"}
-                className="flex-1 px-5 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-gold-400 focus:bg-white/15 transition-all text-sm"
+                className="w-full md:flex-1 px-5 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-gold-400 focus:bg-white/15 transition-all text-sm"
                 required
               />
               <button
                 type="submit"
                 disabled={subStatus === "loading" || subStatus === "success"}
-                className="px-6 py-3 bg-gold-400 hover:bg-gold-500 text-white font-medium text-sm rounded-lg transition-colors flex items-center gap-2 flex-shrink-0 disabled:opacity-60"
+                className="w-full md:w-auto px-6 py-3 bg-gold-400 hover:bg-gold-500 text-white font-medium text-sm rounded-lg transition-colors flex items-center gap-2 disabled:opacity-60"
               >
                 <Send size={16} />
                 {subStatus === "loading" ? "Sending..." : "Subscribe"}

@@ -61,8 +61,12 @@ export default function ContactPage() {
 
       <div className="container-custom py-16">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
+          {/* Form first */}
+          <div className="lg:col-span-3 order-1 lg:order-none">
+            <ContactClient />
+          </div>
           {/* Contact info */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 order-2 lg:order-none">
             <h2 className="font-serif text-2xl font-bold text-primary-500 mb-6">
               Our Details
             </h2>
@@ -104,11 +108,6 @@ export default function ContactPage() {
                 it, try it, love it — or return it, no questions asked.
               </p>
             </div>
-          </div>
-
-          {/* Form */}
-          <div className="lg:col-span-3">
-            <ContactClient />
           </div>
         </div>
       </div>

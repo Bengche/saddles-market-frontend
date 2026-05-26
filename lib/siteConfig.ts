@@ -53,7 +53,7 @@ export const SITE_CONFIG = {
   },
 
   shipping: {
-    freeShippingThreshold: 500,
+    freeShippingThreshold: 1000,
     standardShippingCost: 49,
     expressShippingCost: 99,
     standardRate: 49,
