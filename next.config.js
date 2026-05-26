@@ -20,6 +20,7 @@ const nextConfig = {
       "oursaddlery.com",
       "farmandranchdepot.com",
       "chicksaddlery.com",
+      "www.chicksaddlery.com",
     ],
     formats: ["image/avif", "image/webp"],
   },
