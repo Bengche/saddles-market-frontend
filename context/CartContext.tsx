@@ -1,9 +1,15 @@
-'use client';
+"use client";
 
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import api, { getErrorMessage } from '@/lib/api';
-import { Cart, CartItem } from '@/types';
-import { useToast } from './ToastContext';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
+import api, { getErrorMessage } from "@/lib/api";
+import { Cart, CartItem } from "@/types";
+import { useToast } from "./ToastContext";
 
 interface CartContextType {
   cart: Cart;
@@ -34,14 +40,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   // Ensure session id exists
   useEffect(() => {
-    if (typeof window !== 'undefined' && !localStorage.getItem('sm_session_id')) {
-      localStorage.setItem('sm_session_id', crypto.randomUUID());
+    if (
+      typeof window !== "undefined" &&
+      !localStorage.getItem("sm_session_id")
+    ) {
+      localStorage.setItem("sm_session_id", crypto.randomUUID());
     }
   }, []);
 
   const refreshCart = useCallback(async () => {
     try {
-      const res = await api.get('/cart');
+      const res = await api.get("/cart");
       setCart(res.data.data);
     } catch {
       // silently fail — cart stays at default
@@ -55,11 +64,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const addToCart = async (productId: string, quantity = 1) => {
     setLoading(true);
     try {
-      await api.post('/cart', { productId, quantity });
+      await api.post("/cart", { productId, quantity });
       await refreshCart();
-      showToast('Item added to cart', 'success');
+      showToast("Item added to cart", "success");
     } catch (err) {
-      showToast(getErrorMessage(err), 'error');
+      showToast(getErrorMessage(err), "error");
     } finally {
       setLoading(false);
     }
@@ -71,7 +80,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       await api.put(`/cart/${itemId}`, { quantity });
       await refreshCart();
     } catch (err) {
-      showToast(getErrorMessage(err), 'error');
+      showToast(getErrorMessage(err), "error");
     } finally {
       setLoading(false);
     }
@@ -82,9 +91,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     try {
       await api.delete(`/cart/${itemId}`);
       await refreshCart();
-      showToast('Item removed from cart', 'success');
+      showToast("Item removed from cart", "success");
     } catch (err) {
-      showToast(getErrorMessage(err), 'error');
+      showToast(getErrorMessage(err), "error");
     } finally {
       setLoading(false);
     }
@@ -93,17 +102,27 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const clearCart = async () => {
     setLoading(true);
     try {
-      await api.delete('/cart');
+      await api.delete("/cart");
       setCart(defaultCart);
     } catch (err) {
-      showToast(getErrorMessage(err), 'error');
+      showToast(getErrorMessage(err), "error");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <CartContext.Provider value={{ cart, loading, addToCart, updateItem, removeItem, clearCart, refreshCart }}>
+    <CartContext.Provider
+      value={{
+        cart,
+        loading,
+        addToCart,
+        updateItem,
+        removeItem,
+        clearCart,
+        refreshCart,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );

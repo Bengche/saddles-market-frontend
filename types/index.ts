@@ -5,7 +5,7 @@ export interface User {
   first_name: string;
   last_name: string;
   phone?: string;
-  role: 'user' | 'admin';
+  role: "user" | "admin";
   email_verified: boolean;
   newsletter_subscribed: boolean;
   created_at: string;
@@ -25,16 +25,16 @@ export interface Address {
 
 // ─── Products ────────────────────────────────────────────────────────────────
 export type SaddleDiscipline =
-  | 'western'
-  | 'english'
-  | 'dressage'
-  | 'jumping'
-  | 'trail'
-  | 'barrel_racing'
-  | 'youth'
-  | 'all_purpose';
+  | "western"
+  | "english"
+  | "dressage"
+  | "jumping"
+  | "trail"
+  | "barrel_racing"
+  | "youth"
+  | "all_purpose";
 
-export type SaddleCondition = 'new' | 'excellent' | 'good' | 'fair';
+export type SaddleCondition = "new" | "excellent" | "good" | "fair";
 
 export interface Category {
   id: string;
@@ -93,7 +93,7 @@ export interface ProductFilters {
   maxPrice?: number;
   search?: string;
   featured?: boolean;
-  sort?: 'price_asc' | 'price_desc' | 'newest' | 'rating' | 'name_asc';
+  sort?: "price_asc" | "price_desc" | "newest" | "rating" | "name_asc";
   page?: number;
   limit?: number;
 }
@@ -103,7 +103,17 @@ export interface CartItem {
   id: string;
   product_id: string;
   quantity: number;
-  product: Pick<Product, 'id' | 'name' | 'slug' | 'price' | 'compare_price' | 'stock_quantity' | 'images' | 'primary_image'>;
+  product: Pick<
+    Product,
+    | "id"
+    | "name"
+    | "slug"
+    | "price"
+    | "compare_price"
+    | "stock_quantity"
+    | "images"
+    | "primary_image"
+  >;
 }
 
 export interface Cart {
@@ -114,16 +124,16 @@ export interface Cart {
 
 // ─── Orders ──────────────────────────────────────────────────────────────────
 export type OrderStatus =
-  | 'pending'
-  | 'confirmed'
-  | 'processing'
-  | 'shipped'
-  | 'delivered'
-  | 'cancelled'
-  | 'refund_requested'
-  | 'refunded';
+  | "pending"
+  | "confirmed"
+  | "processing"
+  | "shipped"
+  | "delivered"
+  | "cancelled"
+  | "refund_requested"
+  | "refunded";
 
-export type PaymentStatus = 'pending' | 'paid' | 'failed' | 'refunded';
+export type PaymentStatus = "pending" | "paid" | "failed" | "refunded";
 
 export interface OrderItem {
   id: string;
@@ -243,7 +253,7 @@ export interface CheckoutForm {
   billing_zip?: string;
   billing_country?: string;
   coupon_code?: string;
-  shipping_method: 'standard' | 'express';
+  shipping_method: "standard" | "express";
   notes?: string;
-  payment_method: 'card' | 'paypal' | 'bank_transfer';
+  payment_method: "card" | "paypal" | "bank_transfer";
 }

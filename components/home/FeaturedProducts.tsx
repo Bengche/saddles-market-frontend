@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
-import { motion } from 'framer-motion';
-import ProductCard from '@/components/product/ProductCard';
-import { Product } from '@/types';
-import api from '@/lib/api';
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
+import ProductCard from "@/components/product/ProductCard";
+import { Product } from "@/types";
+import api from "@/lib/api";
 
 function SkeletonCard() {
   return (
@@ -27,7 +27,8 @@ export default function FeaturedProducts() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get('/products?featured=true&limit=6')
+    api
+      .get("/products?featured=true&limit=6")
       .then((res) => setProducts(res.data.data?.products || []))
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -39,12 +40,22 @@ export default function FeaturedProducts() {
         {/* Section header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
           <div>
-            <p className="text-gold-500 text-sm font-medium tracking-widest uppercase mb-3">Handpicked Selection</p>
-            <h2 className="section-heading font-bold text-primary-500 pb-4">Featured Saddles</h2>
+            <p className="text-gold-500 text-sm font-medium tracking-widest uppercase mb-3">
+              Handpicked Selection
+            </p>
+            <h2 className="section-heading font-bold text-primary-500 pb-4">
+              Featured Saddles
+            </h2>
           </div>
-          <Link href="/products" className="flex items-center gap-2 text-primary-500 font-medium text-sm hover:text-primary-700 group transition-colors">
+          <Link
+            href="/products"
+            className="flex items-center gap-2 text-primary-500 font-medium text-sm hover:text-primary-700 group transition-colors"
+          >
             View all saddles
-            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform duration-200" />
+            <ArrowRight
+              size={16}
+              className="group-hover:translate-x-1 transition-transform duration-200"
+            />
           </Link>
         </div>
 
@@ -58,7 +69,11 @@ export default function FeaturedProducts() {
         </div>
 
         {!loading && products.length === 0 && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16 text-gray-500">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center py-16 text-gray-500"
+          >
             <p>No featured products at the moment. Check back soon.</p>
           </motion.div>
         )}

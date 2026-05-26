@@ -1,16 +1,24 @@
-'use client';
+"use client";
 
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import api, { getErrorMessage } from '@/lib/api';
-import { User } from '@/types';
-import { useToast } from './ToastContext';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
+import api, { getErrorMessage } from "@/lib/api";
+import { User } from "@/types";
+import { useToast } from "./ToastContext";
 
 interface AuthContextType {
   user: User | null;
   token: string | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (data: RegisterData) => Promise<{ requiresVerification: boolean; email: string }>;
+  register: (
+    data: RegisterData,
+  ) => Promise<{ requiresVerification: boolean; email: string }>;
   logout: () => void;
   refreshUser: () => Promise<void>;
   isAuthenticated: boolean;
@@ -30,7 +38,7 @@ const AuthContext = createContext<AuthContextType>({
   token: null,
   loading: true,
   login: async () => {},
-  register: async () => ({ requiresVerification: true, email: '' }),
+  register: async () => ({ requiresVerification: true, email: "" }),
   logout: () => {},
   refreshUser: async () => {},
   isAuthenticated: false,
@@ -45,20 +53,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const refreshUser = useCallback(async () => {
     try {
-      const res = await api.get('/auth/me');
+      const res = await api.get("/auth/me");
       setUser(res.data.data.user);
     } catch {
       setUser(null);
       setToken(null);
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('sm_token');
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("sm_token");
       }
     }
   }, []);
 
   // Restore session on mount
   useEffect(() => {
-    const storedToken = typeof window !== 'undefined' ? localStorage.getItem('sm_token') : null;
+    const storedToken =
+      typeof window !== "undefined" ? localStorage.getItem("sm_token") : null;
     if (storedToken) {
       setToken(storedToken);
       refreshUser().finally(() => setLoading(false));
@@ -68,24 +77,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [refreshUser]);
 
   const login = async (email: string, password: string) => {
-    const res = await api.post('/auth/login', { email, password });
+    const res = await api.post("/auth/login", { email, password });
     const { token: newToken, user: newUser } = res.data.data;
-    localStorage.setItem('sm_token', newToken);
+    localStorage.setItem("sm_token", newToken);
     setToken(newToken);
     setUser(newUser);
-    showToast(`Welcome back, ${newUser.first_name}!`, 'success');
+    showToast(`Welcome back, ${newUser.first_name}!`, "success");
   };
 
   const register = async (data: RegisterData) => {
-    const res = await api.post('/auth/register', data);
+    const res = await api.post("/auth/register", data);
     return { requiresVerification: true, email: data.email };
   };
 
   const logout = () => {
-    localStorage.removeItem('sm_token');
+    localStorage.removeItem("sm_token");
     setToken(null);
     setUser(null);
-    showToast('You have been logged out.', 'info');
+    showToast("You have been logged out.", "info");
   };
 
   return (
@@ -99,7 +108,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         logout,
         refreshUser,
         isAuthenticated: !!user,
-        isAdmin: user?.role === 'admin',
+        isAdmin: user?.role === "admin",
       }}
     >
       {children}

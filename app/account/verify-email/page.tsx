@@ -1,23 +1,23 @@
-'use client';
+"use client";
 
-import React, { useState, useRef, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { motion } from 'framer-motion';
-import { CheckCircle, RefreshCw } from 'lucide-react';
-import api, { getErrorMessage } from '@/lib/api';
-import { useAuth } from '@/context/AuthContext';
-import { Suspense } from 'react';
+import React, { useState, useRef, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { motion } from "framer-motion";
+import { CheckCircle, RefreshCw } from "lucide-react";
+import api, { getErrorMessage } from "@/lib/api";
+import { useAuth } from "@/context/AuthContext";
+import { Suspense } from "react";
 
 function VerifyEmailForm() {
   const searchParams = useSearchParams();
-  const emailParam = searchParams.get('email') || '';
+  const emailParam = searchParams.get("email") || "";
   const router = useRouter();
   const { refreshUser } = useAuth();
 
-  const [otp, setOtp] = useState(['', '', '', '', '', '']);
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -35,19 +35,23 @@ function VerifyEmailForm() {
     newOtp[i] = value.slice(-1);
     setOtp(newOtp);
     if (value && i < 5) inputRefs.current[i + 1]?.focus();
-    if (newOtp.every((d) => d) && newOtp.join('').length === 6) {
-      handleVerify(newOtp.join(''));
+    if (newOtp.every((d) => d) && newOtp.join("").length === 6) {
+      handleVerify(newOtp.join(""));
     }
   };
 
   const handleKeyDown = (i: number, e: React.KeyboardEvent) => {
-    if (e.key === 'Backspace' && !otp[i] && i > 0) inputRefs.current[i - 1]?.focus();
+    if (e.key === "Backspace" && !otp[i] && i > 0)
+      inputRefs.current[i - 1]?.focus();
   };
 
   const handlePaste = (e: React.ClipboardEvent) => {
-    const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+    const pasted = e.clipboardData
+      .getData("text")
+      .replace(/\D/g, "")
+      .slice(0, 6);
     if (pasted.length === 6) {
-      const digits = pasted.split('');
+      const digits = pasted.split("");
       setOtp(digits);
       handleVerify(pasted);
     }
@@ -55,18 +59,21 @@ function VerifyEmailForm() {
 
   const handleVerify = async (code: string) => {
     setLoading(true);
-    setError('');
+    setError("");
     try {
-      const res = await api.post('/auth/verify-email-otp', { email: emailParam, otp: code });
+      const res = await api.post("/auth/verify-email-otp", {
+        email: emailParam,
+        otp: code,
+      });
       if (res.data.data?.token) {
-        localStorage.setItem('sm_token', res.data.data.token);
+        localStorage.setItem("sm_token", res.data.data.token);
       }
       await refreshUser();
       setSuccess(true);
-      setTimeout(() => router.push('/'), 1800);
+      setTimeout(() => router.push("/"), 1800);
     } catch (err) {
       setError(getErrorMessage(err));
-      setOtp(['', '', '', '', '', '']);
+      setOtp(["", "", "", "", "", ""]);
       inputRefs.current[0]?.focus();
     } finally {
       setLoading(false);
@@ -75,9 +82,9 @@ function VerifyEmailForm() {
 
   const resendOTP = async () => {
     setResending(true);
-    setError('');
+    setError("");
     try {
-      await api.post('/auth/resend-otp', { email: emailParam });
+      await api.post("/auth/resend-otp", { email: emailParam });
       setResendCooldown(60);
     } catch (err) {
       setError(getErrorMessage(err));
@@ -89,12 +96,20 @@ function VerifyEmailForm() {
   if (success) {
     return (
       <div className="min-h-screen bg-cream-100 flex items-center justify-center px-4">
-        <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-center">
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="text-center"
+        >
           <div className="w-20 h-20 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-6">
             <CheckCircle size={40} className="text-green-500" />
           </div>
-          <h1 className="font-serif text-3xl font-bold text-primary-500 mb-3">Email Verified!</h1>
-          <p className="text-gray-500">Welcome to Saddles Market. Redirecting you now...</p>
+          <h1 className="font-serif text-3xl font-bold text-primary-500 mb-3">
+            Email Verified!
+          </h1>
+          <p className="text-gray-500">
+            Welcome to Saddles Market. Redirecting you now...
+          </p>
         </motion.div>
       </div>
     );
@@ -110,10 +125,10 @@ function VerifyEmailForm() {
         <div className="w-16 h-16 rounded-full bg-primary-50 flex items-center justify-center mx-auto mb-6">
           <span className="text-3xl">📧</span>
         </div>
-        <h1 className="font-serif text-2xl font-bold text-primary-500 mb-2">Check Your Email</h1>
-        <p className="text-gray-500 text-sm mb-2">
-          We sent a 6-digit code to:
-        </p>
+        <h1 className="font-serif text-2xl font-bold text-primary-500 mb-2">
+          Check Your Email
+        </h1>
+        <p className="text-gray-500 text-sm mb-2">We sent a 6-digit code to:</p>
         <p className="font-semibold text-gray-900 mb-8">{emailParam}</p>
 
         {error && (
@@ -126,7 +141,9 @@ function VerifyEmailForm() {
           {otp.map((digit, i) => (
             <input
               key={i}
-              ref={(el) => { inputRefs.current[i] = el; }}
+              ref={(el) => {
+                inputRefs.current[i] = el;
+              }}
               type="text"
               inputMode="numeric"
               maxLength={1}
@@ -135,18 +152,18 @@ function VerifyEmailForm() {
               onKeyDown={(e) => handleKeyDown(i, e)}
               disabled={loading}
               className={`w-12 h-14 text-center text-2xl font-bold border-2 rounded-xl outline-none transition-all
-                ${digit ? 'border-primary-400 bg-primary-50 text-primary-600' : 'border-gray-200 bg-white text-gray-900'}
+                ${digit ? "border-primary-400 bg-primary-50 text-primary-600" : "border-gray-200 bg-white text-gray-900"}
                 focus:border-primary-500 focus:ring-2 focus:ring-primary-100 disabled:opacity-60`}
             />
           ))}
         </div>
 
         <button
-          onClick={() => handleVerify(otp.join(''))}
-          disabled={otp.join('').length !== 6 || loading}
+          onClick={() => handleVerify(otp.join(""))}
+          disabled={otp.join("").length !== 6 || loading}
           className="btn-primary w-full py-4 text-base mb-4 disabled:opacity-60"
         >
-          {loading ? 'Verifying...' : 'Verify Email'}
+          {loading ? "Verifying..." : "Verify Email"}
         </button>
 
         <button
@@ -154,8 +171,10 @@ function VerifyEmailForm() {
           disabled={resending || resendCooldown > 0}
           className="flex items-center justify-center gap-2 w-full text-sm text-gray-500 hover:text-primary-600 disabled:opacity-50 transition-colors"
         >
-          <RefreshCw size={14} className={resending ? 'animate-spin' : ''} />
-          {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : "Didn't receive it? Resend code"}
+          <RefreshCw size={14} className={resending ? "animate-spin" : ""} />
+          {resendCooldown > 0
+            ? `Resend in ${resendCooldown}s`
+            : "Didn't receive it? Resend code"}
         </button>
       </motion.div>
     </div>
@@ -163,5 +182,9 @@ function VerifyEmailForm() {
 }
 
 export default function VerifyEmailPage() {
-  return <Suspense><VerifyEmailForm /></Suspense>;
+  return (
+    <Suspense>
+      <VerifyEmailForm />
+    </Suspense>
+  );
 }
