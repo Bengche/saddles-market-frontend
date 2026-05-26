@@ -83,6 +83,7 @@ export default function ShippingPolicyPage() {
           </p>
 
           <h2>Processing Time</h2>
+          <p>
             Orders are typically processed within <strong>1 business day</strong> of being placed. You will receive an email with your tracking number once your order ships.
           </p>
 
