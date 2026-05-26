@@ -31,20 +31,20 @@ export const metadata: Metadata = {
     default: `${SITE_CONFIG.name} — Premium Horse Saddles`,
     template: `%s | ${SITE_CONFIG.name}`,
   },
-  description: SITE_CONFIG.seo.description,
+  description: SITE_CONFIG.seo.defaultDescription,
   keywords: SITE_CONFIG.seo.keywords,
   openGraph: {
     type: 'website',
     siteName: SITE_CONFIG.name,
     title: `${SITE_CONFIG.name} — Premium Horse Saddles`,
-    description: SITE_CONFIG.seo.description,
+    description: SITE_CONFIG.seo.defaultDescription,
     url: SITE_CONFIG.url,
     images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: SITE_CONFIG.name }],
   },
   twitter: {
     card: 'summary_large_image',
     title: `${SITE_CONFIG.name} — Premium Horse Saddles`,
-    description: SITE_CONFIG.seo.description,
+    description: SITE_CONFIG.seo.defaultDescription,
   },
   robots: { index: true, follow: true },
   icons: {
