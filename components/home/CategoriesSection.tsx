@@ -95,8 +95,8 @@ export default function CategoriesSection() {
                   className="object-cover transition-transform duration-700 group-hover:scale-110"
                   sizes="(max-width: 640px) 50vw, 33vw"
                 />
-                {/* Gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-primary-900/85 via-primary-900/30 to-transparent" />
+                {/* Darker gradient overlay for better text readability */}
+                <div className="absolute inset-0 bg-gradient-to-t from-primary-900/95 via-primary-900/70 to-transparent" />
                 {/* Content */}
                 <div className="relative z-10 p-4 md:p-5 w-full">
                   <p className="text-xs text-gold-400 font-medium mb-0.5 uppercase tracking-wider">
