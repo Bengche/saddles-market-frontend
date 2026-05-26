@@ -30,7 +30,7 @@ export default function AdminNewsletterPage() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [broadcastOpen, setBroadcastOpen] = useState(false);
-  const { toast } = useToast();
+  const { showToast } = useToast();
 
   const { register, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm<BroadcastFormData>({ resolver: zodResolver(broadcastSchema) });
 
@@ -49,11 +49,11 @@ export default function AdminNewsletterPage() {
   const sendBroadcast = async (data: BroadcastFormData) => {
     try {
       await api.post('/admin/newsletter/broadcast', data);
-      toast({ type: 'success', message: 'Newsletter broadcast sent!' });
+      showToast('Newsletter broadcast sent!', 'success');
       reset();
       setBroadcastOpen(false);
     } catch (err) {
-      toast({ type: 'error', message: getErrorMessage(err) });
+      showToast(getErrorMessage(err), 'error');
     }
   };
 

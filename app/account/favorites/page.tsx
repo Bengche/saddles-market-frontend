@@ -17,7 +17,7 @@ export default function FavoritesPage() {
   const { favorites, toggle } = useFavorites();
   const { isAuthenticated } = useAuth();
   const { addToCart } = useCart();
-  const { toast } = useToast();
+  const { showToast } = useToast();
   const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -45,15 +45,15 @@ export default function FavoritesPage() {
   const handleRemove = async (product: Product) => {
     await toggle(product.id);
     setProducts((prev) => prev.filter((p) => p.id !== product.id));
-    toast({ type: 'info', message: `${product.name} removed from favorites` });
+    showToast(`${product.name} removed from favorites`, 'info');
   };
 
   const handleAddToCart = async (product: Product) => {
     try {
       await addToCart(product.id, 1);
-      toast({ type: 'success', message: 'Added to cart' });
+      showToast('Added to cart', 'success');
     } catch (err) {
-      toast({ type: 'error', message: getErrorMessage(err) });
+      showToast(getErrorMessage(err), 'error');
     }
   };
 

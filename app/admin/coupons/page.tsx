@@ -37,7 +37,7 @@ export default function AdminCouponsPage() {
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
-  const { toast } = useToast();
+  const { showToast } = useToast();
 
   const { register, handleSubmit, formState: { errors, isSubmitting }, reset, watch } = useForm<CouponFormData>({
     resolver: zodResolver(couponSchema),
@@ -60,12 +60,12 @@ export default function AdminCouponsPage() {
   const createCoupon = async (data: CouponFormData) => {
     try {
       await api.post('/admin/coupons', data);
-      toast({ type: 'success', message: 'Coupon created' });
+      showToast('Coupon created', 'success');
       reset();
       setCreating(false);
       load();
     } catch (err) {
-      toast({ type: 'error', message: getErrorMessage(err) });
+      showToast(getErrorMessage(err), 'error');
     }
   };
 
@@ -73,9 +73,9 @@ export default function AdminCouponsPage() {
     try {
       await api.delete(`/admin/coupons/${id}`);
       setCoupons((prev) => prev.filter((c) => c.id !== id));
-      toast({ type: 'success', message: 'Coupon deleted' });
+      showToast('Coupon deleted', 'success');
     } catch (err) {
-      toast({ type: 'error', message: getErrorMessage(err) });
+      showToast(getErrorMessage(err), 'error');
     } finally {
       setDeleteId(null);
     }
@@ -86,7 +86,7 @@ export default function AdminCouponsPage() {
       await api.patch(`/admin/coupons/${id}`, { is_active: !current });
       setCoupons((prev) => prev.map((c) => c.id === id ? { ...c, is_active: !current } : c));
     } catch (err) {
-      toast({ type: 'error', message: getErrorMessage(err) });
+      showToast(getErrorMessage(err), 'error');
     }
   };
 

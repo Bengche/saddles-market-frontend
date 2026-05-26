@@ -22,7 +22,7 @@ export default function AdminUsersPage() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
-  const { toast } = useToast();
+  const { showToast } = useToast();
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -40,9 +40,9 @@ export default function AdminUsersPage() {
     try {
       await api.patch(`/admin/users/${id}`, { is_active: !current });
       setUsers((prev) => prev.map((u) => u.id === id ? { ...u, is_active: !current } : u));
-      toast({ type: 'success', message: `User ${!current ? 'activated' : 'deactivated'}` });
+      showToast(`User ${!current ? 'activated' : 'deactivated'}`, 'success');
     } catch (err) {
-      toast({ type: 'error', message: getErrorMessage(err) });
+      showToast(getErrorMessage(err), 'error');
     }
   };
 
@@ -50,9 +50,9 @@ export default function AdminUsersPage() {
     try {
       await api.patch(`/admin/users/${id}`, { is_admin: !current });
       setUsers((prev) => prev.map((u) => u.id === id ? { ...u, is_admin: !current } : u));
-      toast({ type: 'success', message: `Admin status ${!current ? 'granted' : 'revoked'}` });
+      showToast(`Admin status ${!current ? 'granted' : 'revoked'}`, 'success');
     } catch (err) {
-      toast({ type: 'error', message: getErrorMessage(err) });
+      showToast(getErrorMessage(err), 'error');
     }
   };
 

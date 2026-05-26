@@ -41,7 +41,7 @@ type Tab = 'profile' | 'security' | 'addresses';
 
 export default function ProfilePage() {
   const { user, refreshUser, isAuthenticated } = useAuth();
-  const { toast } = useToast();
+  const { showToast } = useToast();
   const router = useRouter();
   const [tab, setTab] = useState<Tab>('profile');
   const [addresses, setAddresses] = useState<Address[]>([]);
@@ -79,16 +79,16 @@ export default function ProfilePage() {
     try {
       await api.put('/auth/profile', data);
       await refreshUser();
-      toast({ type: 'success', message: 'Profile updated successfully' });
-    } catch (err) { toast({ type: 'error', message: getErrorMessage(err) }); }
+      showToast('Profile updated successfully', 'success');
+    } catch (err) { showToast(getErrorMessage(err), 'error'); }
   };
 
   const changePassword = async (data: PasswordFormData) => {
     try {
       await api.put('/auth/change-password', { currentPassword: data.currentPassword, newPassword: data.newPassword });
-      toast({ type: 'success', message: 'Password changed successfully' });
+      showToast('Password changed successfully', 'success');
       passwordForm.reset();
-    } catch (err) { toast({ type: 'error', message: getErrorMessage(err) }); }
+    } catch (err) { showToast(getErrorMessage(err), 'error'); }
   };
 
   const saveAddress = async (data: AddressFormData) => {
@@ -102,16 +102,16 @@ export default function ProfilePage() {
       setAddressModalOpen(false);
       setEditingAddress(null);
       addressForm.reset();
-      toast({ type: 'success', message: editingAddress ? 'Address updated' : 'Address added' });
-    } catch (err) { toast({ type: 'error', message: getErrorMessage(err) }); }
+      showToast(editingAddress ? 'Address updated' : 'Address added', 'success');
+    } catch (err) { showToast(getErrorMessage(err), 'error'); }
   };
 
   const deleteAddress = async (id: string) => {
     try {
       await api.delete(`/auth/addresses/${id}`);
       setAddresses((prev) => prev.filter((a) => a.id !== id));
-      toast({ type: 'success', message: 'Address deleted' });
-    } catch (err) { toast({ type: 'error', message: getErrorMessage(err) }); }
+      showToast('Address deleted', 'success');
+    } catch (err) { showToast(getErrorMessage(err), 'error'); }
   };
 
   const openEditAddress = (address: Address) => {

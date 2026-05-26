@@ -20,7 +20,7 @@ export default function AdminBlogPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleteId, setDeleteId] = useState<string | null>(null);
-  const { toast } = useToast();
+  const { showToast } = useToast();
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -37,9 +37,9 @@ export default function AdminBlogPage() {
     try {
       await api.delete(`/admin/blog/${id}`);
       setPosts((prev) => prev.filter((p) => p.id !== id));
-      toast({ type: 'success', message: 'Post deleted' });
+      showToast('Post deleted', 'success');
     } catch (err) {
-      toast({ type: 'error', message: getErrorMessage(err) });
+      showToast(getErrorMessage(err), 'error');
     } finally {
       setDeleteId(null);
     }
@@ -50,7 +50,7 @@ export default function AdminBlogPage() {
       await api.patch(`/admin/blog/${post.id}`, { is_published: !post.is_published });
       setPosts((prev) => prev.map((p) => p.id === post.id ? { ...p, is_published: !post.is_published } : p));
     } catch (err) {
-      toast({ type: 'error', message: getErrorMessage(err) });
+      showToast(getErrorMessage(err), 'error');
     }
   };
 

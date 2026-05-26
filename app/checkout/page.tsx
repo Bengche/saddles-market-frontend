@@ -45,7 +45,7 @@ const SHIPPING_OPTIONS = [
 export default function CheckoutPage() {
   const { cart, clearCart } = useCart();
   const { user } = useAuth();
-  const { toast } = useToast();
+  const { showToast } = useToast();
   const router = useRouter();
   const [couponCode, setCouponCode] = useState('');
   const [couponDiscount, setCouponDiscount] = useState(0);
@@ -95,9 +95,9 @@ export default function CheckoutPage() {
     try {
       const res = await api.post('/cart/apply-coupon', { code: couponCode, subtotal });
       setCouponDiscount(res.data.discount);
-      toast({ type: 'success', message: `Coupon applied! You saved ${formatPrice(res.data.discount)}` });
+      showToast(`Coupon applied! You saved ${formatPrice(res.data.discount)}`, 'success');
     } catch (err) {
-      toast({ type: 'error', message: getErrorMessage(err) });
+      showToast(getErrorMessage(err), 'error');
     } finally {
       setCouponLoading(false);
     }
@@ -105,7 +105,7 @@ export default function CheckoutPage() {
 
   const onSubmit = async (data: CheckoutFormData) => {
     if (!cart?.items.length) {
-      toast({ type: 'error', message: 'Your cart is empty' });
+      showToast('Your cart is empty', 'error');
       return;
     }
     setPlacingOrder(true);
@@ -123,7 +123,7 @@ export default function CheckoutPage() {
       setOrderId(res.data.order.id);
       setSuccess(true);
     } catch (err) {
-      toast({ type: 'error', message: getErrorMessage(err) });
+      showToast(getErrorMessage(err), 'error');
     } finally {
       setPlacingOrder(false);
     }

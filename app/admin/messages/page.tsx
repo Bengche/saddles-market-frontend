@@ -21,7 +21,7 @@ export default function AdminMessagesPage() {
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
-  const { toast } = useToast();
+  const { showToast } = useToast();
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -39,7 +39,7 @@ export default function AdminMessagesPage() {
       await api.patch(`/admin/messages/${id}`, { is_read: true });
       setMessages((prev) => prev.map((m) => m.id === id ? { ...m, is_read: true } : m));
     } catch (err) {
-      toast({ type: 'error', message: getErrorMessage(err) });
+      showToast(getErrorMessage(err), 'error');
     }
   };
 
@@ -47,9 +47,9 @@ export default function AdminMessagesPage() {
     try {
       await api.delete(`/admin/messages/${id}`);
       setMessages((prev) => prev.filter((m) => m.id !== id));
-      toast({ type: 'success', message: 'Message deleted' });
+      showToast('Message deleted', 'success');
     } catch (err) {
-      toast({ type: 'error', message: getErrorMessage(err) });
+      showToast(getErrorMessage(err), 'error');
     }
   };
 

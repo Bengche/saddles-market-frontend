@@ -15,7 +15,7 @@ export default function AdminProductsPage() {
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [deleteId, setDeleteId] = useState<string | null>(null);
-  const { toast } = useToast();
+  const { showToast } = useToast();
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -32,10 +32,10 @@ export default function AdminProductsPage() {
   const handleDelete = async (id: string) => {
     try {
       await api.delete(`/admin/products/${id}`);
-      toast({ type: 'success', message: 'Product deleted' });
+      showToast('Product deleted', 'success');
       load();
     } catch (err) {
-      toast({ type: 'error', message: getErrorMessage(err) });
+      showToast(getErrorMessage(err), 'error');
     } finally {
       setDeleteId(null);
     }
@@ -46,7 +46,7 @@ export default function AdminProductsPage() {
       await api.patch(`/admin/products/${id}`, { is_featured: !featured });
       setProducts((prev) => prev.map((p) => p.id === id ? { ...p, is_featured: !featured } : p));
     } catch (err) {
-      toast({ type: 'error', message: getErrorMessage(err) });
+      showToast(getErrorMessage(err), 'error');
     }
   };
 

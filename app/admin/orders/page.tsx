@@ -37,7 +37,7 @@ export default function AdminOrdersPage() {
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState<string | null>(null);
-  const { toast } = useToast();
+  const { showToast } = useToast();
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -58,9 +58,9 @@ export default function AdminOrdersPage() {
     try {
       await api.patch(`/admin/orders/${orderId}`, { status: newStatus });
       setOrders((prev) => prev.map((o) => o.id === orderId ? { ...o, status: newStatus } : o));
-      toast({ type: 'success', message: `Order status updated to "${newStatus}"` });
+      showToast(`Order status updated to "${newStatus}"`, 'success');
     } catch (err) {
-      toast({ type: 'error', message: getErrorMessage(err) });
+      showToast(getErrorMessage(err), 'error');
     } finally {
       setUpdating(null);
     }
