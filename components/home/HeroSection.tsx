@@ -23,7 +23,7 @@ export default function HeroSection() {
       {/* Parallax background */}
       <motion.div className="absolute inset-0" style={{ y: bgY }}>
         <Image
-          src="https://media.istockphoto.com/id/184942536/photo/english-saddle.webp?a=1&b=1&s=612x612&w=0&k=20&c=gP0imBeFkc7bPxrvPyRndTmN-3O5_uYutW2dFX8DDh0="
+          src="https://media.istockphoto.com/id/2163238499/photo/brown-leather-saddle-hanging-on-wooden-wall-at-stable-or-barn-professional-equestrian-horse.jpg?s=612x612&w=0&k=20&c=ASLzmKjV2AzNgYVwyjRMqSnsPLDDxnMOK7oU0TYGQkQ="
           alt="Premium horse saddle in use"
           fill
           className="object-cover"
