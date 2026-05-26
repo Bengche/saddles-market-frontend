@@ -14,7 +14,7 @@ import { formatPrice } from '@/lib/siteConfig';
 import type { Product } from '@/types';
 
 export default function FavoritesPage() {
-  const { favorites, toggle, isLoaded } = useFavorites();
+  const { favorites, toggle } = useFavorites();
   const { isAuthenticated } = useAuth();
   const { addToCart } = useCart();
   const { toast } = useToast();
