@@ -9,7 +9,7 @@ import { SITE_CONFIG } from '@/lib/siteConfig';
 
 export const metadata: Metadata = {
   title: `${SITE_CONFIG.name} — Premium Horse Saddles`,
-  description: SITE_CONFIG.seo.description,
+  description: SITE_CONFIG.seo.defaultDescription,
   alternates: { canonical: SITE_CONFIG.url },
   openGraph: {
     url: SITE_CONFIG.url,
