@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     template: `%s | ${SITE_CONFIG.name}`,
   },
   description: SITE_CONFIG.seo.defaultDescription,
-  keywords: SITE_CONFIG.seo.keywords,
+  keywords: [...SITE_CONFIG.seo.keywords],
   openGraph: {
     type: 'website',
     siteName: SITE_CONFIG.name,
