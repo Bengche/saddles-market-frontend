@@ -1,7 +1,6 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import api, { getErrorMessage } from '@/lib/api';
 import { Cart, CartItem } from '@/types';
 import { useToast } from './ToastContext';
@@ -36,7 +35,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   // Ensure session id exists
   useEffect(() => {
     if (typeof window !== 'undefined' && !localStorage.getItem('sm_session_id')) {
-      localStorage.setItem('sm_session_id', uuidv4());
+      localStorage.setItem('sm_session_id', crypto.randomUUID());
     }
   }, []);
 
