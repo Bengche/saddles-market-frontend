@@ -48,17 +48,29 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  // Only fetch cart if session id exists
   const refreshCart = useCallback(async () => {
+    if (typeof window === "undefined") return;
+    const sessionId = localStorage.getItem("sm_session_id");
+    if (!sessionId) return;
     try {
-      const res = await api.get("/api/cart");
+      const res = await api.get("/api/cart", {
+        headers: { "x-session-id": sessionId },
+      });
       setCart(res.data.data);
     } catch {
       // silently fail — cart stays at default
     }
   }, []);
 
+  // Only fetch cart on mount if session id exists and only on cart-related pages
   useEffect(() => {
-    refreshCart();
+    if (typeof window === "undefined") return;
+    const sessionId = localStorage.getItem("sm_session_id");
+    const cartPages = ["/cart", "/checkout", "/products", "/product/"];
+    if (sessionId && cartPages.some((p) => window.location.pathname.startsWith(p))) {
+      refreshCart();
+    }
   }, [refreshCart]);
 
   const addToCart = async (productId: string, quantity = 1) => {
