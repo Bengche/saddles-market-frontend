@@ -75,7 +75,7 @@ export default function WhyUsPage() {
       {/* Hero */}
       <div className="relative bg-primary-900 py-28 overflow-hidden">
         <Image
-          src="https://images.unsplash.com/photo-1553284965-5dd67897f9a5?w=1600&q=80"
+          src="https://i.ebayimg.com/images/g/3jkAAOSwYQ9j4AgD/s-l1200.jpg"
           alt="Equestrian riding"
           fill
           className="object-cover opacity-20"

@@ -49,7 +49,7 @@ export default function AboutPage() {
       {/* Hero */}
       <div className="relative bg-primary-900 py-24 md:py-32 overflow-hidden">
         <Image
-          src="https://images.unsplash.com/photo-1553284965-5dd67897f9a5?w=1600&q=80"
+          src="https://hilason.com/cdn/shop/files/108682-z_d1ce9c8d-682a-43cb-b10b-a9f1206d9162_grande.jpg?v=1762666209"
           alt="Equestrian"
           fill
           className="object-cover opacity-25"
@@ -125,7 +125,7 @@ export default function AboutPage() {
             <div className="relative">
               <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-luxury-lg">
                 <Image
-                  src="https://images.unsplash.com/photo-1590725121839-892b458a74fe?w=800&q=80"
+                  src="https://i.ebayimg.com/images/g/B5YAAOSwSTBkE2XH/s-l400.jpg"
                   alt="Quality saddle craftsmanship"
                   fill
                   className="object-cover"

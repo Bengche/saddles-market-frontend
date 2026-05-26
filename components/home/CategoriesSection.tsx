@@ -10,42 +10,41 @@ const categories = [
     name: "Western",
     slug: "western",
     image:
-      "https://images.unsplash.com/photo-1590725121839-892b458a74fe?w=600&q=80",
+      "https://saddleonlineshop.com/cdn/shop/products/9075PonySS_2.jpg?v=1640371922",
     desc: "Classic comfort for trail and ranch",
   },
   {
     name: "English",
     slug: "english",
-    image:
-      "https://images.unsplash.com/photo-1506126797682-c2d38a51819e?w=600&q=80",
+    image: "https://i.ebayimg.com/images/g/C7AAAOSwgjxlAEVo/s-l400.jpg",
     desc: "Elegant tradition and performance",
   },
   {
     name: "Dressage",
     slug: "dressage",
     image:
-      "https://images.unsplash.com/photo-1517423440428-a5a00ad493e8?w=600&q=80",
+      "https://batessaddles.eu/cdn/shop/files/900f5e982bd95b47f29f9206e397d759.png?v=1729221812",
     desc: "Precision for the art of dressage",
   },
   {
     name: "Jumping",
     slug: "jumping",
     image:
-      "https://images.unsplash.com/photo-1551887196-72e32bfc7bf3?w=600&q=80",
+      "https://oursaddlery.com/wp-content/uploads/2021/05/Jumping_Saddle_Prestige_Paris_Classic_Black_1.jpg",
     desc: "Freedom and security over fences",
   },
   {
     name: "Trail",
     slug: "trail",
     image:
-      "https://images.unsplash.com/photo-1553284965-5dd67897f9a5?w=600&q=80",
+      "https://farmandranchdepot.com/images/product/KS-Braden-Trail-Saddle-KS2634.jpeg",
     desc: "Built for long-distance adventures",
   },
   {
     name: "Youth",
     slug: "youth",
     image:
-      "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=600&q=80",
+      "https://www.chicksaddlery.com/Merchant2/graphics/00000001/WT5394_271x380_2.jpg",
     desc: "Safe and comfortable for young riders",
   },
 ];
