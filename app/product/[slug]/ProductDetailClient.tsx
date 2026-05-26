@@ -348,7 +348,7 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
               {[
                 { icon: Shield, text: "30-Day Trial" },
                 { icon: RotateCcw, text: "Free Returns" },
-                { icon: Truck, text: "Free Shipping $500+" },
+                { icon: Truck, text: `Free Shipping $${require("@/lib/siteConfig").SITE_CONFIG.shipping.freeShippingThreshold}+` },
               ].map(({ icon: Icon, text }) => (
                 <div
                   key={text}

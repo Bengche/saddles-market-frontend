@@ -52,10 +52,10 @@ export default function ShippingPolicyPage() {
         </div>
 
         <div className="prose-luxury">
-          <h2>Free Shipping</h2>
-          <p>
-            All orders with a merchandise subtotal of{" "}
-            <strong>
+                        <p className="text-xs text-gray-400 mt-1">
+                          Orders over{" "}
+                          {formatPrice(require("@/lib/siteConfig").SITE_CONFIG.shipping.freeShippingThreshold)}
+                        </p>
               {formatPrice(SITE_CONFIG.shipping.freeShippingThreshold)} or more
             </strong>{" "}
             qualify for free standard shipping within the United States. The
@@ -82,7 +82,7 @@ export default function ShippingPolicyPage() {
           </p>
 
           <h2>Processing Time</h2>
-          <p>
+                          {formatPrice(require("@/lib/siteConfig").SITE_CONFIG.shipping.freeShippingThreshold)} or more
             Orders are typically processed within{" "}
             <strong>1 business day</strong> of being placed. You will receive an
             email with your tracking number once your order ships.
@@ -95,7 +95,7 @@ export default function ShippingPolicyPage() {
             tracking number on your <strong>Orders</strong> page after logging
             into your account.
           </p>
-
+                        {formatPrice(require("@/lib/siteConfig").SITE_CONFIG.shipping.freeShippingThreshold)}.
           <h2>Insurance</h2>
           <p>
             All shipments are fully insured. If your saddle is lost or damaged

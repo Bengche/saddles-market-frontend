@@ -19,7 +19,7 @@ import { SITE_CONFIG } from "@/lib/siteConfig";
 
 export default function CartPage() {
   const { cart, updateItem, removeItem, loading } = useCart();
-  const freeShippingThreshold = SITE_CONFIG.shipping.freeShippingThreshold;
+  const freeShippingThreshold = require("@/lib/siteConfig").SITE_CONFIG.shipping.freeShippingThreshold;
   const remaining = Math.max(0, freeShippingThreshold - cart.subtotal);
 
   if (!cart.items.length) {

@@ -109,7 +109,7 @@ export default function HeroSection() {
               { value: "500+", label: "Saddles in Stock" },
               { value: "30-Day", label: "Free Trial" },
               { value: "4.9/5", label: "Customer Rating" },
-              { value: "Free", label: "Shipping $500+" },
+              { value: "Free", label: `Shipping $${require("@/lib/siteConfig").SITE_CONFIG.shipping.freeShippingThreshold}+` },
             ].map((stat) => (
               <div key={stat.label}>
                 <p className="text-white font-bold text-lg leading-none">

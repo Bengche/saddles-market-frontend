@@ -13,6 +13,8 @@ const nextConfig = {
       "res.cloudinary.com",
       "images.unsplash.com",
       "media.istockphoto.com",
+      "i.ebayimg.com",
+      "hilason.com",
     ],
     formats: ["image/avif", "image/webp"],
   },
