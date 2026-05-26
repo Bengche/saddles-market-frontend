@@ -37,7 +37,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
       return;
     }
     try {
-      const res = await api.get("/favorites");
+      const res = await api.get("/api/favorites");
       const ids = res.data.data.favorites.map(
         (f: { product_id: string }) => f.product_id,
       );
@@ -66,10 +66,10 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
     });
     try {
       if (isFav) {
-        await api.delete(`/favorites/${productId}`);
+        await api.delete(`/api/favorites/${productId}`);
         showToast("Removed from favorites", "success");
       } else {
-        await api.post("/favorites", { productId });
+        await api.post("/api/favorites", { productId });
         showToast("Added to favorites", "success");
       }
     } catch (err) {

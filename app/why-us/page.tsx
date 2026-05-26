@@ -170,7 +170,12 @@ export default function WhyUsPage() {
             Ready to Find Your Perfect Saddle?
           </h2>
           <p className="text-gray-500 text-lg mb-8">
-            Browse over {require("@/lib/siteConfig").SITE_CONFIG.shipping.freeShippingThreshold}+ saddles — all backed by our 30-day free trial.
+            Browse over{" "}
+            {
+              require("@/lib/siteConfig").SITE_CONFIG.shipping
+                .freeShippingThreshold
+            }
+            + saddles — all backed by our 30-day free trial.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/products" className="btn-gold px-10 py-4 text-base">

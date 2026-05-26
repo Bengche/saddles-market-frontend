@@ -27,7 +27,7 @@ export default function AdminUsersPage() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await api.get("/admin/users", {
+      const res = await api.get("/api/admin/users", {
         params: { page, limit: 20, search: search || undefined },
       });
       setUsers(res.data.users);

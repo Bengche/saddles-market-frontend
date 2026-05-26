@@ -29,7 +29,7 @@ export default function BlogPreviewSection() {
 
   useEffect(() => {
     api
-      .get("/blog?limit=3")
+      .get("/api/blog?limit=3")
       .then((res) => setPosts(res.data.data?.posts || []))
       .catch(() => {})
       .finally(() => setLoading(false));

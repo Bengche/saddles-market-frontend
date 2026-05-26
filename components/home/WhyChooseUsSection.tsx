@@ -32,8 +32,7 @@ const features = [
   {
     icon: Truck,
     title: `Free Shipping Over $${require("@/lib/siteConfig").SITE_CONFIG.shipping.freeShippingThreshold}`,
-    description:
-      `Orders over $${require("@/lib/siteConfig").SITE_CONFIG.shipping.freeShippingThreshold} ship free anywhere in the United States. Express shipping available on all orders at checkout.`,
+    description: `Orders over $${require("@/lib/siteConfig").SITE_CONFIG.shipping.freeShippingThreshold} ship free anywhere in the United States. Express shipping available on all orders at checkout.`,
     color: "text-green-600",
     bg: "bg-green-50",
   },

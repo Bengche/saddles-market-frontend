@@ -20,7 +20,7 @@ export default function AdminProductsPage() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await api.get("/admin/products", {
+      const res = await api.get("/api/admin/products", {
         params: { page, limit: 20, search: search || undefined },
       });
       setProducts(res.data.products);
@@ -38,7 +38,7 @@ export default function AdminProductsPage() {
 
   const handleDelete = async (id: string) => {
     try {
-      await api.delete(`/admin/products/${id}`);
+      await api.delete(`/api/admin/products/${id}`);
       showToast("Product deleted", "success");
       load();
     } catch (err) {

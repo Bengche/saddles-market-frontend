@@ -111,7 +111,7 @@ export default function CheckoutPage() {
     if (!couponCode.trim()) return;
     setCouponLoading(true);
     try {
-      const res = await api.post("/cart/apply-coupon", {
+      const res = await api.post("/api/cart/apply-coupon", {
         code: couponCode,
         subtotal,
       });
@@ -144,7 +144,7 @@ export default function CheckoutPage() {
         coupon_code: couponCode || undefined,
         notes: data.notes,
       };
-      const res = await api.post("/orders", payload);
+      const res = await api.post("/api/orders", payload);
       await clearCart();
       setOrderId(res.data.order.id);
       setSuccess(true);

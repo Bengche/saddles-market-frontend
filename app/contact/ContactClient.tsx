@@ -37,7 +37,7 @@ export default function ContactClient() {
 
   const onSubmit = async (data: FormData) => {
     try {
-      await api.post("/contact", data);
+      await api.post("/api/contact", data);
       setSent(true);
     } catch (err) {
       setError("root", { message: getErrorMessage(err) });

@@ -33,7 +33,7 @@ export default function FavoritesPage() {
   const loadFavorites = async () => {
     setLoading(true);
     try {
-      const res = await api.get("/favorites");
+      const res = await api.get("/api/favorites");
       setProducts(res.data.favorites ?? []);
     } catch {
       // silent

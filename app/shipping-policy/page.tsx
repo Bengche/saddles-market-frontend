@@ -52,16 +52,17 @@ export default function ShippingPolicyPage() {
         </div>
 
         <div className="prose-luxury">
-            <p className="text-xs text-gray-400 mt-1">
-              Orders over {formatPrice(SITE_CONFIG.shipping.freeShippingThreshold)}
-            </p>
-            <p>
-              <strong>
-                {formatPrice(SITE_CONFIG.shipping.freeShippingThreshold)} or more
-              </strong>{" "}
-              qualify for free standard shipping within the United States. The
-              free shipping option is automatically applied at checkout.
-            </p>
+          <p className="text-xs text-gray-400 mt-1">
+            Orders over{" "}
+            {formatPrice(SITE_CONFIG.shipping.freeShippingThreshold)}
+          </p>
+          <p>
+            <strong>
+              {formatPrice(SITE_CONFIG.shipping.freeShippingThreshold)} or more
+            </strong>{" "}
+            qualify for free standard shipping within the United States. The
+            free shipping option is automatically applied at checkout.
+          </p>
 
           <h2>
             Standard Shipping — {formatPrice(SITE_CONFIG.shipping.standardRate)}
@@ -84,7 +85,9 @@ export default function ShippingPolicyPage() {
 
           <h2>Processing Time</h2>
           <p>
-            Orders are typically processed within <strong>1 business day</strong> of being placed. You will receive an email with your tracking number once your order ships.
+            Orders are typically processed within{" "}
+            <strong>1 business day</strong> of being placed. You will receive an
+            email with your tracking number once your order ships.
           </p>
 
           <h2>Tracking</h2>
@@ -94,7 +97,7 @@ export default function ShippingPolicyPage() {
             tracking number on your <strong>Orders</strong> page after logging
             into your account.
           </p>
-          
+
           <h2>Insurance</h2>
           <p>
             All shipments are fully insured. If your saddle is lost or damaged

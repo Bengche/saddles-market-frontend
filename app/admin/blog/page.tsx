@@ -25,7 +25,7 @@ export default function AdminBlogPage() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await api.get("/admin/blog", { params: { limit: 50 } });
+      const res = await api.get("/api/admin/blog", { params: { limit: 50 } });
       setPosts(res.data.posts);
     } catch {
       /* silent */
@@ -40,7 +40,7 @@ export default function AdminBlogPage() {
 
   const handleDelete = async (id: string) => {
     try {
-      await api.delete(`/admin/blog/${id}`);
+      await api.delete(`/api/admin/blog/${id}`);
       setPosts((prev) => prev.filter((p) => p.id !== id));
       showToast("Post deleted", "success");
     } catch (err) {
@@ -52,7 +52,7 @@ export default function AdminBlogPage() {
 
   const togglePublish = async (post: BlogPost) => {
     try {
-      await api.patch(`/admin/blog/${post.id}`, {
+      await api.patch(`/api/admin/blog/${post.id}`, {
         is_published: !post.is_published,
       });
       setPosts((prev) =>

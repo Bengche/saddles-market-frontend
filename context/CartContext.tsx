@@ -50,7 +50,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const refreshCart = useCallback(async () => {
     try {
-      const res = await api.get("/cart");
+      const res = await api.get("/api/cart");
       setCart(res.data.data);
     } catch {
       // silently fail — cart stays at default
@@ -64,7 +64,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const addToCart = async (productId: string, quantity = 1) => {
     setLoading(true);
     try {
-      await api.post("/cart", { productId, quantity });
+      await api.post("/api/cart", { productId, quantity });
       await refreshCart();
       showToast("Item added to cart", "success");
     } catch (err) {
@@ -77,7 +77,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const updateItem = async (itemId: string, quantity: number) => {
     setLoading(true);
     try {
-      await api.put(`/cart/${itemId}`, { quantity });
+      await api.put(`/api/cart/${itemId}`, { quantity });
       await refreshCart();
     } catch (err) {
       showToast(getErrorMessage(err), "error");
@@ -89,7 +89,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const removeItem = async (itemId: string) => {
     setLoading(true);
     try {
-      await api.delete(`/cart/${itemId}`);
+      await api.delete(`/api/cart/${itemId}`);
       await refreshCart();
       showToast("Item removed from cart", "success");
     } catch (err) {
@@ -102,7 +102,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const clearCart = async () => {
     setLoading(true);
     try {
-      await api.delete("/cart");
+      await api.delete("/api/cart");
       setCart(defaultCart);
     } catch (err) {
       showToast(getErrorMessage(err), "error");

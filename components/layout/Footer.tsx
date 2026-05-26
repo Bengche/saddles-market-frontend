@@ -52,7 +52,7 @@ export default function Footer() {
     if (!email) return;
     setSubStatus("loading");
     try {
-      await api.post("/newsletter/subscribe", { email });
+      await api.post("/api/newsletter/subscribe", { email });
       setSubStatus("success");
       setSubMessage(
         "Thank you! Check your inbox to confirm your subscription.",
