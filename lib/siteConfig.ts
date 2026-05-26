@@ -72,7 +72,7 @@ export const SITE_CONFIG = {
     defaultTitle: "Saddles Market — Premium Horse Saddles",
     titleTemplate: "%s | Saddles Market",
     defaultDescription:
-      `Shop premium horse saddles at Saddles Market. Western, English, dressage, jumping & trail saddles. Expert quality, 30-day free trial, free shipping on orders over $${SITE_CONFIG.shipping.freeShippingThreshold}.",
+      `Shop premium horse saddles at Saddles Market. Western, English, dressage, jumping & trail saddles. Expert quality, 30-day free trial, free shipping on orders over $${SITE_CONFIG.shipping.freeShippingThreshold}.`,
     keywords: [
       "horse saddles",
       "buy horse saddles",
