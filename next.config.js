@@ -9,7 +9,7 @@ const withPWA = require("next-pwa")({
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["res.cloudinary.com", "images.unsplash.com"],
+    domains: ["res.cloudinary.com", "images.unsplash.com", "media.istockphoto.com"],
     formats: ["image/avif", "image/webp"],
   },
   async headers() {
