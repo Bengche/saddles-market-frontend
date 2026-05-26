@@ -44,7 +44,7 @@ export default function AdminProductsPage() {
   const handleToggleFeatured = async (id: string, featured: boolean) => {
     try {
       await api.patch(`/admin/products/${id}`, { is_featured: !featured });
-      setProducts((prev) => prev.map((p) => p.id === id ? { ...p, is_featured: !featured } : p));
+      setProducts((prev) => prev.map((p) => p.id === id ? { ...p, featured: !featured } : p));
     } catch (err) {
       showToast(getErrorMessage(err), 'error');
     }
@@ -116,10 +116,10 @@ export default function AdminProductsPage() {
                   <td className="px-5 py-3 text-gray-500 capitalize">{product.condition}</td>
                   <td className="px-5 py-3">
                     <button
-                      onClick={() => handleToggleFeatured(product.id, product.is_featured)}
-                      className={`w-9 h-5 rounded-full transition-colors relative ${product.is_featured ? 'bg-primary-500' : 'bg-gray-200'}`}
+                      onClick={() => handleToggleFeatured(product.id, product.featured)}
+                      className={`w-9 h-5 rounded-full transition-colors relative ${product.featured ? 'bg-primary-500' : 'bg-gray-200'}`}
                     >
-                      <span className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${product.is_featured ? 'translate-x-4' : 'translate-x-0.5'}`} />
+                      <span className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${product.featured ? 'translate-x-4' : 'translate-x-0.5'}`} />
                     </button>
                   </td>
                   <td className="px-5 py-3">
