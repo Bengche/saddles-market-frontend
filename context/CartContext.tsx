@@ -68,7 +68,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     if (typeof window === "undefined") return;
     const sessionId = localStorage.getItem("sm_session_id");
     const cartPages = ["/cart", "/checkout", "/products", "/product/"];
-    if (sessionId && cartPages.some((p) => window.location.pathname.startsWith(p))) {
+    if (
+      sessionId &&
+      cartPages.some((p) => window.location.pathname.startsWith(p))
+    ) {
       refreshCart();
     }
   }, [refreshCart]);

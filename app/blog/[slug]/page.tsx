@@ -16,7 +16,7 @@ async function getPost(
 ): Promise<{ post: BlogPost; related: BlogPost[] } | null> {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/blog/${slug}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/blog/${slug}`,
       {
         next: { revalidate: 600 },
       },

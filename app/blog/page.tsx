@@ -46,7 +46,7 @@ export default function BlogPage() {
     const params = new URLSearchParams({ page: String(page), limit: "9" });
     if (activeCategory !== "All") params.set("category", activeCategory);
     api
-      .get(`/api/blog?${params.toString()}`)
+      .get(`/blog?${params.toString()}`)
       .then((r) => {
         setPosts(r.data.data?.posts || []);
         setTotalPages(r.data.data?.pagination?.pages || 1);
