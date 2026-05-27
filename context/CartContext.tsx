@@ -54,7 +54,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     const sessionId = localStorage.getItem("sm_session_id");
     if (!sessionId) return;
     try {
-      const res = await api.get("/api/cart", {
+      const res = await api.get("/cart", {
         headers: { "x-session-id": sessionId },
       });
       setCart(res.data.data);
@@ -79,7 +79,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const addToCart = async (productId: string, quantity = 1) => {
     setLoading(true);
     try {
-      await api.post("/api/cart", { productId, quantity });
+      await api.post("/cart", { productId, quantity });
       await refreshCart();
       showToast("Item added to cart", "success");
     } catch (err) {
@@ -92,7 +92,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const updateItem = async (itemId: string, quantity: number) => {
     setLoading(true);
     try {
-      await api.put(`/api/cart/${itemId}`, { quantity });
+      await api.put(`/cart/${itemId}`, { quantity });
       await refreshCart();
     } catch (err) {
       showToast(getErrorMessage(err), "error");
@@ -104,7 +104,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const removeItem = async (itemId: string) => {
     setLoading(true);
     try {
-      await api.delete(`/api/cart/${itemId}`);
+      await api.delete(`/cart/${itemId}`);
       await refreshCart();
       showToast("Item removed from cart", "success");
     } catch (err) {
@@ -117,7 +117,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const clearCart = async () => {
     setLoading(true);
     try {
-      await api.delete("/api/cart");
+      await api.delete("/cart");
       setCart(defaultCart);
     } catch (err) {
       showToast(getErrorMessage(err), "error");

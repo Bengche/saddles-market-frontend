@@ -49,7 +49,7 @@ export default function AdminOrdersPage() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await api.get("/api/admin/orders", {
+      const res = await api.get("/admin/orders", {
         params: {
           page,
           limit: 20,

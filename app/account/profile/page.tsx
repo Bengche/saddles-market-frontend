@@ -75,7 +75,7 @@ export default function ProfilePage() {
 
   const loadAddresses = async () => {
     try {
-      const res = await api.get("/api/auth/addresses");
+      const res = await api.get("/auth/addresses");
       setAddresses(res.data.addresses ?? []);
     } catch {
       // ignore
@@ -101,7 +101,7 @@ export default function ProfilePage() {
 
   const saveProfile = async (data: ProfileFormData) => {
     try {
-      await api.put("/api/auth/profile", data);
+      await api.put("/auth/profile", data);
       await refreshUser();
       showToast("Profile updated successfully", "success");
     } catch (err) {
@@ -111,7 +111,7 @@ export default function ProfilePage() {
 
   const changePassword = async (data: PasswordFormData) => {
     try {
-      await api.put("/api/auth/change-password", {
+      await api.put("/auth/change-password", {
         currentPassword: data.currentPassword,
         newPassword: data.newPassword,
       });
@@ -125,9 +125,9 @@ export default function ProfilePage() {
   const saveAddress = async (data: AddressFormData) => {
     try {
       if (editingAddress) {
-        await api.put(`/api/auth/addresses/${editingAddress.id}`, data);
+        await api.put(`/auth/addresses/${editingAddress.id}`, data);
       } else {
-        await api.post("/api/auth/addresses", data);
+        await api.post("/auth/addresses", data);
       }
       await loadAddresses();
       setAddressModalOpen(false);
@@ -144,7 +144,7 @@ export default function ProfilePage() {
 
   const deleteAddress = async (id: string) => {
     try {
-      await api.delete(`/api/auth/addresses/${id}`);
+      await api.delete(`/auth/addresses/${id}`);
       setAddresses((prev) => prev.filter((a) => a.id !== id));
       showToast("Address deleted", "success");
     } catch (err) {

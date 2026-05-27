@@ -42,7 +42,7 @@ export default function AdminNewsletterPage() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await api.get("/api/admin/newsletter", {
+      const res = await api.get("/admin/newsletter", {
         params: { page, limit: 30, search: search || undefined },
       });
       setSubscribers(res.data.subscribers);
@@ -60,7 +60,7 @@ export default function AdminNewsletterPage() {
 
   const sendBroadcast = async (data: BroadcastFormData) => {
     try {
-      await api.post("/api/admin/newsletter/broadcast", data);
+      await api.post("/admin/newsletter/broadcast", data);
       showToast("Newsletter broadcast sent!", "success");
       reset();
       setBroadcastOpen(false);

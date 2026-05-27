@@ -25,7 +25,7 @@ export default function AdminBlogPage() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await api.get("/api/admin/blog", { params: { limit: 50 } });
+      const res = await api.get("/admin/blog", { params: { limit: 50 } });
       setPosts(res.data.posts);
     } catch {
       /* silent */
@@ -40,7 +40,7 @@ export default function AdminBlogPage() {
 
   const handleDelete = async (id: string) => {
     try {
-      await api.delete(`/api/admin/blog/${id}`);
+      await api.delete(`/admin/blog/${id}`);
       setPosts((prev) => prev.filter((p) => p.id !== id));
       showToast("Post deleted", "success");
     } catch (err) {
@@ -54,22 +54,22 @@ export default function AdminBlogPage() {
     try {
       await api.patch(`/api/admin/blog/${post.id}`, {
         is_published: !post.is_published,
-      });
-      setPosts((prev) =>
-        prev.map((p) =>
-          p.id === post.id ? { ...p, is_published: !post.is_published } : p,
-        ),
-      );
-    } catch (err) {
-      showToast(getErrorMessage(err), "error");
-    }
-  };
-
-  return (
-    <div className="p-8">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="font-serif text-3xl font-bold text-gray-900">
-          Blog Posts
+      try {
+        await api.patch(`/admin/blog/${post.id}`, {
+          is_published: !post.is_published,
+        });
+        setPosts((prev) =>
+          prev.map((p) =>
+            p.id === post.id ? { ...p, is_published: !post.is_published } : p,
+          ),
+        );
+        showToast(
+          `Post ${!post.is_published ? "published" : "unpublished"}`,
+          "success",
+        );
+      } catch (err) {
+        showToast(getErrorMessage(err), "error");
+      }
         </h1>
         <Link
           href="/admin/blog/new"

@@ -59,7 +59,7 @@ export default function AdminCouponsPage() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await api.get("/api/admin/coupons");
+      const res = await api.get("/admin/coupons");
       setCoupons(res.data.coupons);
     } catch {
       /* silent */
@@ -74,7 +74,7 @@ export default function AdminCouponsPage() {
 
   const createCoupon = async (data: CouponFormData) => {
     try {
-      await api.post("/api/admin/coupons", data);
+      await api.post("/admin/coupons", data);
       showToast("Coupon created", "success");
       reset();
       setCreating(false);
@@ -86,7 +86,7 @@ export default function AdminCouponsPage() {
 
   const deleteCoupon = async (id: string) => {
     try {
-      await api.delete(`/api/admin/coupons/${id}`);
+      await api.delete(`/admin/coupons/${id}`);
       setCoupons((prev) => prev.filter((c) => c.id !== id));
       showToast("Coupon deleted", "success");
     } catch (err) {

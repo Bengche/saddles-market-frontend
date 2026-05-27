@@ -53,7 +53,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const refreshUser = useCallback(async () => {
     try {
-      const res = await api.get("/api/auth/me");
+      const res = await api.get("/auth/me");
       setUser(res.data.data.user);
     } catch {
       setUser(null);
@@ -77,7 +77,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [refreshUser]);
 
   const login = async (email: string, password: string) => {
-    const res = await api.post("/api/auth/login", { email, password });
+    const res = await api.post("/auth/login", { email, password });
     const { token: newToken, user: newUser } = res.data.data;
     localStorage.setItem("sm_token", newToken);
     setToken(newToken);
@@ -86,7 +86,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const register = async (data: RegisterData) => {
-    const res = await api.post("/api/auth/register", data);
+    const res = await api.post("/auth/register", data);
     return { requiresVerification: true, email: data.email };
   };
 

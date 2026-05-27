@@ -93,7 +93,7 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
     }
     setSubmittingReview(true);
     try {
-      await api.post("/api/reviews", { productId: product.id, ...reviewForm });
+      await api.post("/reviews", { productId: product.id, ...reviewForm });
       showToast("Review submitted — pending approval", "success");
       setReviewForm({ rating: 5, title: "", body: "" });
     } catch {

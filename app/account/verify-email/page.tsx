@@ -61,7 +61,7 @@ function VerifyEmailForm() {
     setLoading(true);
     setError("");
     try {
-      const res = await api.post("/api/auth/verify-email-otp", {
+      const res = await api.post("/auth/verify-email-otp", {
         email: emailParam,
         otp: code,
       });
@@ -84,7 +84,7 @@ function VerifyEmailForm() {
     setResending(true);
     setError("");
     try {
-      await api.post("/api/auth/resend-otp", { email: emailParam });
+      await api.post("/auth/resend-otp", { email: emailParam });
       setResendCooldown(60);
     } catch (err) {
       setError(getErrorMessage(err));
