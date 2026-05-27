@@ -55,19 +55,18 @@ export default function AdminBlogPage() {
       await api.patch(`/admin/blog/${post.id}`, {
         is_published: !post.is_published,
       });
-        setPosts((prev) =>
-          prev.map((p) =>
-            p.id === post.id ? { ...p, is_published: !post.is_published } : p,
-          ),
-        );
-        showToast(
-          `Post ${!post.is_published ? "published" : "unpublished"}`,
-          "success",
-        );
-      } catch (err) {
-        showToast(getErrorMessage(err), "error");
-      }
-        </h1>
+      setPosts((prev) =>
+        prev.map((p) =>
+          p.id === post.id ? { ...p, is_published: !post.is_published } : p,
+        ),
+      );
+      showToast(
+        `Post ${!post.is_published ? "published" : "unpublished"}`,
+        "success",
+      );
+    } catch (err) {
+      showToast(getErrorMessage(err), "error");
+    }
         <Link
           href="/admin/blog/new"
           className="btn-primary flex items-center gap-2 py-2 px-5 text-sm"
