@@ -52,12 +52,9 @@ export default function AdminBlogPage() {
 
   const togglePublish = async (post: BlogPost) => {
     try {
-      await api.patch(`/api/admin/blog/${post.id}`, {
+      await api.patch(`/admin/blog/${post.id}`, {
         is_published: !post.is_published,
-      try {
-        await api.patch(`/admin/blog/${post.id}`, {
-          is_published: !post.is_published,
-        });
+      });
         setPosts((prev) =>
           prev.map((p) =>
             p.id === post.id ? { ...p, is_published: !post.is_published } : p,
