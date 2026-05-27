@@ -67,6 +67,13 @@ export default function AdminBlogPage() {
     } catch (err) {
       showToast(getErrorMessage(err), "error");
     }
+  };
+
+  // ...existing code...
+
+  return (
+    <div>
+      <div>
         <Link
           href="/admin/blog/new"
           className="btn-primary flex items-center gap-2 py-2 px-5 text-sm"
@@ -74,6 +81,9 @@ export default function AdminBlogPage() {
           <Plus size={16} /> New Post
         </Link>
       </div>
+      {/* ...existing code... */}
+    </div>
+  );
 
       <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
