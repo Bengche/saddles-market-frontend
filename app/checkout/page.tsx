@@ -111,7 +111,7 @@ export default function CheckoutPage() {
     if (!couponCode.trim()) return;
     setCouponLoading(true);
     try {
-      const res = await api.post("/api/cart/apply-coupon", {
+      const res = await api.post("/cart/apply-coupon", {
         code: couponCode,
         subtotal,
       });
@@ -135,16 +135,21 @@ export default function CheckoutPage() {
     setPlacingOrder(true);
     try {
       const payload = {
-        shipping_address: data.shipping,
-        billing_address: data.billingSameAsShipping
+        items: cart!.items.map((i) => ({
+          productId: i.product.id,
+          quantity: i.quantity,
+        })),
+        shippingAddress: data.shipping,
+        billingAddress: data.billingSameAsShipping
           ? data.shipping
           : data.billing,
-        shipping_method: freeShip ? "free" : data.shippingMethod,
-        payment_method: data.paymentMethod,
-        coupon_code: couponCode || undefined,
-        notes: data.notes,
+        billedSameAsShip: data.billingSameAsShipping,
+        shippingMethod: freeShip ? "free" : data.shippingMethod,
+        paymentMethod: data.paymentMethod,
+        couponCode: couponCode || undefined,
+        customerNotes: data.notes,
       };
-      const res = await api.post("/api/orders", payload);
+      const res = await api.post("/orders", payload);
       await clearCart();
       setOrderId(res.data.order.id);
       setSuccess(true);
