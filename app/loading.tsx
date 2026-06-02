@@ -2,10 +2,14 @@
 
 export default function Loading() {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-cream-100">
-      <div className="flex flex-col items-center gap-6">
-        {/* Animated saddle/brand mark */}
-        <div className="relative w-20 h-20">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-cream-100"
+      role="status"
+      aria-live="polite"
+      aria-label="Loading page"
+    >
+      <div className="flex flex-col items-center gap-5 px-6 text-center">
+        <div className="relative h-20 w-20" aria-hidden="true">
           <svg
             viewBox="0 0 64 64"
             fill="none"
@@ -17,10 +21,9 @@ export default function Loading() {
               fill="none"
               stroke="#1C3557"
               strokeWidth="2"
-              className="animate-[dash_2s_ease-in-out_infinite]"
               strokeDasharray="200"
               strokeDashoffset="200"
-              style={{ animation: "dashAnim 2s ease-in-out infinite" }}
+              className="animate-saddle-dash motion-reduce:animate-none"
             />
             <path
               d="M18 36 C18 29 24 25 32 25 C40 25 46 29 46 36 L44 36 C42 31 38 28 32 28 C26 28 22 31 20 36 Z"
@@ -32,12 +35,10 @@ export default function Loading() {
               fill="#C4A862"
             />
           </svg>
-          {/* Spinning ring */}
           <svg
-            className="absolute inset-0 w-full h-full animate-spin"
+            className="absolute inset-0 h-full w-full motion-safe:animate-[spin_1.4s_linear_infinite] motion-reduce:hidden"
             viewBox="0 0 64 64"
             fill="none"
-            style={{ animationDuration: "1.5s" }}
           >
             <circle
               cx="32"
@@ -51,19 +52,18 @@ export default function Loading() {
           </svg>
         </div>
 
-        <div className="text-center">
-          <p
-            className="font-serif text-lg font-semibold tracking-widest text-primary-500 uppercase"
-            style={{ letterSpacing: "0.3em" }}
-          >
+        <div>
+          <p className="font-serif text-lg font-semibold uppercase tracking-[0.22em] text-primary-500 sm:text-xl">
             Saddles Market
           </p>
-          <p className="mt-1 text-sm text-gray-400 tracking-wide">Loading...</p>
+          <p className="mt-1 text-sm tracking-wide text-gray-500">
+            Preparing your experience...
+          </p>
         </div>
       </div>
 
       <style jsx global>{`
-        @keyframes dashAnim {
+        @keyframes saddle-dash {
           0% {
             stroke-dashoffset: 200;
           }
@@ -73,6 +73,10 @@ export default function Loading() {
           100% {
             stroke-dashoffset: -200;
           }
+        }
+
+        .animate-saddle-dash {
+          animation: saddle-dash 2s ease-in-out infinite;
         }
       `}</style>
     </div>

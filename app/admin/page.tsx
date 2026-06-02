@@ -116,34 +116,36 @@ export default function AdminDashboard() {
     : [];
 
   return (
-    <div className="p-8">
-      <h1 className="font-serif text-3xl font-bold text-gray-900 mb-8">
+    <div className="p-4 sm:p-6 lg:p-8">
+      <h1 className="mb-6 font-serif text-2xl font-bold text-gray-900 sm:mb-8 sm:text-3xl">
         Dashboard
       </h1>
 
       {loading ? (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
+        <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:mb-10 lg:grid-cols-4 lg:gap-5">
           {Array.from({ length: 8 }).map((_, i) => (
             <div
               key={i}
-              className="h-28 bg-white rounded-2xl shadow-sm animate-pulse"
+              className="h-24 rounded-2xl bg-white shadow-sm animate-pulse sm:h-28"
             />
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
+        <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:mb-10 lg:grid-cols-4 lg:gap-5">
           {cards.map((card) => (
             <Link
               key={card.label}
               href={card.link}
-              className="bg-white rounded-2xl shadow-sm p-5 hover:shadow-md transition-shadow"
+              className="rounded-2xl bg-white p-4 shadow-sm transition-shadow hover:shadow-md sm:p-5"
             >
               <div
                 className={`w-10 h-10 ${card.color} rounded-xl flex items-center justify-center mb-3`}
               >
                 <card.icon size={20} className="text-white" />
               </div>
-              <p className="text-2xl font-bold text-gray-900">{card.value}</p>
+              <p className="text-xl font-bold text-gray-900 sm:text-2xl">
+                {card.value}
+              </p>
               <p className="text-sm text-gray-500 mt-0.5">{card.label}</p>
             </Link>
           ))}
@@ -151,8 +153,8 @@ export default function AdminDashboard() {
       )}
 
       {/* Recent Orders */}
-      <div className="bg-white rounded-2xl shadow-sm">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+      <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
+        <div className="flex items-center justify-between border-b border-gray-100 px-4 py-4 sm:px-6">
           <h2 className="font-semibold text-gray-900">Recent Orders</h2>
           <Link
             href="/admin/orders"
@@ -162,7 +164,7 @@ export default function AdminDashboard() {
           </Link>
         </div>
         {loading ? (
-          <div className="p-6 space-y-3">
+          <div className="space-y-3 p-4 sm:p-6">
             {Array.from({ length: 5 }).map((_, i) => (
               <div
                 key={i}
@@ -172,15 +174,15 @@ export default function AdminDashboard() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="min-w-[700px] w-full text-sm">
               <thead>
                 <tr className="text-xs text-gray-400 uppercase border-b border-gray-100">
-                  <th className="px-6 py-3 text-left">Order</th>
-                  <th className="px-6 py-3 text-left">Customer</th>
-                  <th className="px-6 py-3 text-left">Date</th>
-                  <th className="px-6 py-3 text-left">Total</th>
-                  <th className="px-6 py-3 text-left">Status</th>
-                  <th className="px-6 py-3 text-left"></th>
+                  <th className="px-4 py-3 text-left sm:px-6">Order</th>
+                  <th className="px-4 py-3 text-left sm:px-6">Customer</th>
+                  <th className="px-4 py-3 text-left sm:px-6">Date</th>
+                  <th className="px-4 py-3 text-left sm:px-6">Total</th>
+                  <th className="px-4 py-3 text-left sm:px-6">Status</th>
+                  <th className="px-4 py-3 text-left sm:px-6"></th>
                 </tr>
               </thead>
               <tbody>
@@ -189,26 +191,26 @@ export default function AdminDashboard() {
                     key={order.id}
                     className="border-b border-gray-50 hover:bg-gray-50"
                   >
-                    <td className="px-6 py-3 font-medium text-gray-900">
+                    <td className="px-4 py-3 font-medium text-gray-900 sm:px-6">
                       #{order.id.slice(0, 8)}
                     </td>
-                    <td className="px-6 py-3 text-gray-600">
+                    <td className="px-4 py-3 text-gray-600 sm:px-6">
                       {order.first_name} {order.last_name}
                     </td>
-                    <td className="px-6 py-3 text-gray-500">
+                    <td className="px-4 py-3 text-gray-500 sm:px-6">
                       {new Date(order.created_at).toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-3 font-medium text-gray-900">
+                    <td className="px-4 py-3 font-medium text-gray-900 sm:px-6">
                       {formatPrice(Number(order.total_amount))}
                     </td>
-                    <td className="px-6 py-3">
+                    <td className="px-4 py-3 sm:px-6">
                       <span
                         className={`px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_COLORS[order.status] ?? "bg-gray-100 text-gray-600"}`}
                       >
                         {order.status}
                       </span>
                     </td>
-                    <td className="px-6 py-3">
+                    <td className="px-4 py-3 sm:px-6">
                       <Link
                         href={`/admin/orders?id=${order.id}`}
                         className="text-primary-500 hover:underline text-xs"

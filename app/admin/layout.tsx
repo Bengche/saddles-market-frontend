@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/context/AuthContext";
 import { useRouter, usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   LayoutDashboard,
@@ -13,8 +13,9 @@ import {
   Tag,
   Mail,
   MessageSquare,
-  ChevronRight,
   LogOut,
+  Menu,
+  X,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -36,6 +37,7 @@ export default function AdminLayout({
   const { isAdmin, isAuthenticated, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -47,12 +49,41 @@ export default function AdminLayout({
     }
   }, [isAuthenticated, isAdmin, router]);
 
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
   if (!isAdmin) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      {/* Sidebar */}
-      <aside className="w-60 bg-primary-900 text-white flex-shrink-0 flex flex-col">
+    <div className="min-h-screen bg-gray-50 md:flex">
+      <header className="sticky top-0 z-40 flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3 md:hidden">
+        <Link
+          href="/admin"
+          className="font-serif text-lg font-bold text-primary-500"
+        >
+          Admin Panel
+        </Link>
+        <button
+          onClick={() => setMenuOpen((prev) => !prev)}
+          className="rounded-lg border border-gray-200 p-2 text-gray-700"
+          aria-label="Toggle admin navigation"
+        >
+          {menuOpen ? <X size={18} /> : <Menu size={18} />}
+        </button>
+      </header>
+
+      {menuOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-black/40 md:hidden"
+          onClick={() => setMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      <aside
+        className={`fixed inset-y-0 left-0 z-40 w-64 bg-primary-900 text-white flex-shrink-0 flex flex-col transform transition-transform duration-200 md:static md:translate-x-0 ${menuOpen ? "translate-x-0" : "-translate-x-full"}`}
+      >
         <div className="px-5 py-5 border-b border-white/10">
           <Link href="/" className="font-serif text-xl font-bold text-white">
             Saddles Market
@@ -86,8 +117,7 @@ export default function AdminLayout({
         </div>
       </aside>
 
-      {/* Main content */}
-      <main className="flex-1 min-w-0 overflow-auto">{children}</main>
+      <main className="flex-1 min-w-0 overflow-auto pb-6">{children}</main>
     </div>
   );
 }
