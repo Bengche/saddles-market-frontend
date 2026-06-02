@@ -34,24 +34,36 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { isAdmin, isAuthenticated, logout } = useAuth();
+  const { isAdmin, isAuthenticated, loading, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
+    if (loading) return;
+
     if (!isAuthenticated) {
-      router.push("/account/login?redirect=/admin");
+      const redirectTo = pathname || "/admin";
+      router.push(`/account/login?redirect=${encodeURIComponent(redirectTo)}`);
       return;
     }
+
     if (!isAdmin) {
       router.push("/");
     }
-  }, [isAuthenticated, isAdmin, router]);
+  }, [loading, isAuthenticated, isAdmin, pathname, router]);
 
   useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+        <div className="h-10 w-10 rounded-full border-2 border-gray-200 border-t-primary-500 animate-spin" />
+      </div>
+    );
+  }
 
   if (!isAdmin) return null;
 
