@@ -70,14 +70,6 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedTreeSize, setSelectedTreeSize] = useState("");
   const [selectedWidth, setSelectedWidth] = useState("");
-  });
-  const [submittingReview, setSubmittingReview] = useState(false);
-
-  // Variant selections
-  const [selectedSeatSize, setSelectedSeatSize] = useState("");
-  const [selectedColor, setSelectedColor] = useState("");
-  const [selectedTreeSize, setSelectedTreeSize] = useState("");
-  const [selectedWidth, setSelectedWidth] = useState("");
 
   const { addToCart, loading: cartLoading } = useCart();
   const { toggle: toggleFav, isFavorite } = useFavorites();
