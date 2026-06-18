@@ -16,6 +16,11 @@ import {
   CheckCircle,
   Share2,
   Tag,
+  Award,
+  FileText,
+  RefreshCw,
+  Lock,
+  Package,
 } from "lucide-react";
 import { Product, Review } from "@/types";
 import { useCart } from "@/context/CartContext";
@@ -25,6 +30,15 @@ import { useToast } from "@/context/ToastContext";
 import { formatPrice } from "@/lib/utils";
 import api from "@/lib/api";
 import ProductCard from "@/components/product/ProductCard";
+
+// Standard horse saddle width options — shown on every product
+const SADDLE_WIDTHS = [
+  { value: "Narrow (C)", label: "Narrow", sub: "C / 4.5\"" },
+  { value: "Regular / Medium (D)", label: "Regular / Medium", sub: "D / 5\"" },
+  { value: "Wide (W)", label: "Wide", sub: "W / 5.5\"" },
+  { value: "Extra Wide (XW)", label: "Extra Wide", sub: "XW / 6\"" },
+  { value: "Extra Extra Wide (XXW)", label: "Extra Extra Wide", sub: "XXW / 6.5\"" },
+];
 
 interface Props {
   initialProduct: Product;
@@ -50,6 +64,21 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
     body: "",
   });
   const [submittingReview, setSubmittingReview] = useState(false);
+
+  // Variant selections
+  const [selectedSeatSize, setSelectedSeatSize] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedTreeSize, setSelectedTreeSize] = useState("");
+  const [selectedWidth, setSelectedWidth] = useState("");
+  });
+  const [submittingReview, setSubmittingReview] = useState(false);
+
+  // Variant selections
+  const [selectedSeatSize, setSelectedSeatSize] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedTreeSize, setSelectedTreeSize] = useState("");
+  const [selectedWidth, setSelectedWidth] = useState("");
+
   const { addToCart, loading: cartLoading } = useCart();
   const { toggle: toggleFav, isFavorite } = useFavorites();
   const { isAuthenticated } = useAuth();
@@ -83,7 +112,31 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
       .catch(() => {});
   }, [product.id, product.category_id]);
 
-  const handleAddToCart = () => addToCart(product.id, qty);
+  const hasSeatSizes = (product.available_seat_sizes?.length ?? 0) > 0;
+  const hasColors = (product.available_colors?.length ?? 0) > 0;
+  const hasTreeSizes = (product.available_tree_sizes?.length ?? 0) > 0;
+
+  const handleAddToCart = () => {
+    // Validate required selections
+    if (hasSeatSizes && !selectedSeatSize) {
+      showToast("Please select a seat size.", "info");
+      return;
+    }
+    if (hasColors && !selectedColor) {
+      showToast("Please select a color.", "info");
+      return;
+    }
+    if (!selectedWidth) {
+      showToast("Please select a saddle width.", "info");
+      return;
+    }
+    addToCart(product.id, qty, {
+      selectedSeatSize: selectedSeatSize || undefined,
+      selectedColor: selectedColor || undefined,
+      selectedTreeSize: selectedTreeSize || undefined,
+      selectedWidth,
+    });
+  };
 
   const handleSubmitReview = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -304,6 +357,132 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
               </p>
             )}
 
+            {/* ── Variant Selectors ──────────────────────────────────────── */}
+
+            {/* Seat Size */}
+            {hasSeatSizes && (
+              <div className="mb-5">
+                <p className="text-sm font-semibold text-gray-800 mb-2">
+                  Seat Size
+                  {selectedSeatSize && (
+                    <span className="ml-2 text-primary-600 font-normal">— {selectedSeatSize}</span>
+                  )}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {product.available_seat_sizes!.map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => setSelectedSeatSize(s)}
+                      className={`px-4 py-2 rounded-lg border text-sm font-medium transition-all ${
+                        selectedSeatSize === s
+                          ? "bg-primary-600 text-white border-primary-600"
+                          : "bg-white text-gray-700 border-gray-200 hover:border-primary-400"
+                      }`}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Horse Saddle Width — always shown */}
+            <div className="mb-5">
+              <p className="text-sm font-semibold text-gray-800 mb-1">
+                Gullet / Width
+                {selectedWidth && (
+                  <span className="ml-2 text-primary-600 font-normal">— {selectedWidth}</span>
+                )}
+              </p>
+              <p className="text-xs text-gray-400 mb-2">
+                Match to your horse's back width.{" "}
+                <a
+                  href="https://www.saddlefit4life.com/saddle-fit-for-horse"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline hover:text-primary-500"
+                >
+                  How to measure
+                </a>
+              </p>
+              <div className="flex flex-col gap-1.5">
+                {SADDLE_WIDTHS.map((w) => (
+                  <button
+                    key={w.value}
+                    type="button"
+                    onClick={() => setSelectedWidth(w.value)}
+                    className={`flex items-center justify-between px-4 py-2.5 rounded-xl border text-sm transition-all text-left ${
+                      selectedWidth === w.value
+                        ? "bg-primary-600 text-white border-primary-600"
+                        : "bg-white text-gray-700 border-gray-200 hover:border-primary-400"
+                    }`}
+                  >
+                    <span className="font-medium">{w.label}</span>
+                    <span className={`text-xs ${selectedWidth === w.value ? "text-primary-200" : "text-gray-400"}`}>
+                      {w.sub}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Color */}
+            {hasColors && (
+              <div className="mb-5">
+                <p className="text-sm font-semibold text-gray-800 mb-2">
+                  Color
+                  {selectedColor && (
+                    <span className="ml-2 text-primary-600 font-normal">— {selectedColor}</span>
+                  )}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {product.available_colors!.map((c) => (
+                    <button
+                      key={c}
+                      type="button"
+                      onClick={() => setSelectedColor(c)}
+                      className={`px-4 py-2 rounded-lg border text-sm font-medium transition-all ${
+                        selectedColor === c
+                          ? "bg-primary-600 text-white border-primary-600"
+                          : "bg-white text-gray-700 border-gray-200 hover:border-primary-400"
+                      }`}
+                    >
+                      {c}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Tree Size */}
+            {hasTreeSizes && (
+              <div className="mb-5">
+                <p className="text-sm font-semibold text-gray-800 mb-2">
+                  Tree Size
+                  {selectedTreeSize && (
+                    <span className="ml-2 text-primary-600 font-normal">— {selectedTreeSize}</span>
+                  )}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {product.available_tree_sizes!.map((t) => (
+                    <button
+                      key={t}
+                      type="button"
+                      onClick={() => setSelectedTreeSize(t)}
+                      className={`px-4 py-2 rounded-lg border text-sm font-medium transition-all ${
+                        selectedTreeSize === t
+                          ? "bg-primary-600 text-white border-primary-600"
+                          : "bg-white text-gray-700 border-gray-200 hover:border-primary-400"
+                      }`}
+                    >
+                      {t}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Quantity + Add to cart */}
             <div className="flex items-center gap-4 mb-6">
               <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-white">
@@ -343,26 +522,55 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
               </button>
             </div>
 
-            {/* Trust features */}
-            <div className="grid grid-cols-3 gap-3">
+            {/* Trust badges */}
+            <div className="grid grid-cols-2 gap-3 mb-6">
               {[
-                { icon: Shield, text: "30-Day Trial" },
-                { icon: RotateCcw, text: "Free Returns" },
-                {
-                  icon: Truck,
-                  text: `Free Shipping $${require("@/lib/siteConfig").SITE_CONFIG.shipping.freeShippingThreshold}+`,
-                },
-              ].map(({ icon: Icon, text }) => (
+                { icon: Shield, text: "30-Day Ride Trial", sub: "Ride it before you keep it" },
+                { icon: RotateCcw, text: "Free Returns", sub: "Hassle-free return process" },
+                { icon: Truck, text: "Free Shipping $500+", sub: "Fast, insured delivery" },
+                { icon: Award, text: "Authenticity Guaranteed", sub: "Every saddle vetted" },
+                { icon: Lock, text: "Secure Checkout", sub: "256-bit SSL encryption" },
+                { icon: Package, text: "Expert Packing", sub: "Arrives safely, protected" },
+              ].map(({ icon: Icon, text, sub }) => (
                 <div
                   key={text}
-                  className="flex flex-col items-center gap-1.5 p-3 bg-white rounded-xl border border-gray-100 text-center"
+                  className="flex items-start gap-3 p-3 bg-white rounded-xl border border-gray-100"
                 >
-                  <Icon size={18} className="text-primary-500" />
-                  <span className="text-xs text-gray-600 leading-tight">
-                    {text}
-                  </span>
+                  <div className="w-8 h-8 bg-primary-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Icon size={16} className="text-primary-500" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold text-gray-800 leading-tight">{text}</p>
+                    <p className="text-xs text-gray-400 leading-tight mt-0.5">{sub}</p>
+                  </div>
                 </div>
               ))}
+            </div>
+
+            {/* Policy links */}
+            <div className="flex flex-col gap-2 p-4 bg-cream-50 border border-cream-200 rounded-xl mb-5">
+              <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1">Policies</p>
+              <Link
+                href="/shipping-policy"
+                className="flex items-center gap-2 text-sm text-gray-600 hover:text-primary-600 transition-colors group"
+              >
+                <Truck size={14} className="text-primary-400 group-hover:text-primary-600 flex-shrink-0" />
+                <span className="group-hover:underline">Shipping Policy — rates, timelines & carriers</span>
+              </Link>
+              <Link
+                href="/returns-refunds"
+                className="flex items-center gap-2 text-sm text-gray-600 hover:text-primary-600 transition-colors group"
+              >
+                <RefreshCw size={14} className="text-primary-400 group-hover:text-primary-600 flex-shrink-0" />
+                <span className="group-hover:underline">Returns &amp; Refunds — 30-day ride trial details</span>
+              </Link>
+              <Link
+                href="/terms-conditions"
+                className="flex items-center gap-2 text-sm text-gray-600 hover:text-primary-600 transition-colors group"
+              >
+                <FileText size={14} className="text-primary-400 group-hover:text-primary-600 flex-shrink-0" />
+                <span className="group-hover:underline">Terms &amp; Conditions</span>
+              </Link>
             </div>
 
             {/* Share */}
@@ -371,7 +579,7 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
                 navigator.clipboard?.writeText(window.location.href);
                 showToast("Link copied!", "success");
               }}
-              className="flex items-center gap-2 text-sm text-gray-400 hover:text-gray-600 mt-5 transition-colors"
+              className="flex items-center gap-2 text-sm text-gray-400 hover:text-gray-600 transition-colors"
             >
               <Share2 size={15} /> Share this saddle
             </button>

@@ -11,10 +11,17 @@ import api, { getErrorMessage } from "@/lib/api";
 import { Cart, CartItem } from "@/types";
 import { useToast } from "./ToastContext";
 
+interface ProductSelections {
+  selectedSeatSize?: string;
+  selectedColor?: string;
+  selectedTreeSize?: string;
+  selectedWidth?: string;
+}
+
 interface CartContextType {
   cart: Cart;
   loading: boolean;
-  addToCart: (productId: string, quantity?: number) => Promise<void>;
+  addToCart: (productId: string, quantity?: number, selections?: ProductSelections) => Promise<void>;
   updateItem: (itemId: string, quantity: number) => Promise<void>;
   removeItem: (itemId: string) => Promise<void>;
   clearCart: () => Promise<void>;
@@ -76,10 +83,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, [refreshCart]);
 
-  const addToCart = async (productId: string, quantity = 1) => {
+  const addToCart = async (productId: string, quantity = 1, selections?: ProductSelections) => {
     setLoading(true);
     try {
-      await api.post("/cart/add", { productId, quantity });
+      await api.post("/cart/add", { productId, quantity, ...selections });
       await refreshCart();
       showToast("Item added to cart", "success");
     } catch (err) {

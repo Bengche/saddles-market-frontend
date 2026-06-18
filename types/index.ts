@@ -82,6 +82,9 @@ export interface Product {
   images: ProductImage[];
   primary_image?: string;
   tags?: string[];
+  available_seat_sizes?: string[];
+  available_colors?: string[];
+  available_tree_sizes?: string[];
   created_at: string;
 }
 
@@ -103,6 +106,10 @@ export interface CartItem {
   id: string;
   product_id: string;
   quantity: number;
+  selected_seat_size?: string;
+  selected_color?: string;
+  selected_tree_size?: string;
+  selected_width?: string;
   product: Pick<
     Product,
     | "id"
@@ -144,6 +151,10 @@ export interface OrderItem {
   quantity: number;
   unit_price: number;
   subtotal: number;
+  seatSize?: string;
+  selectedColor?: string;
+  selectedTreeSize?: string;
+  selectedWidth?: string;
 }
 
 export interface Order {

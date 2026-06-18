@@ -119,6 +119,33 @@ export default function CartPage() {
                   >
                     {item.product.name}
                   </Link>
+
+                  {/* Selected variant summary */}
+                  {(item.selected_seat_size || item.selected_color || item.selected_tree_size || item.selected_width) && (
+                    <div className="flex flex-wrap gap-1.5 mb-2">
+                      {item.selected_seat_size && (
+                        <span className="text-xs bg-primary-50 text-primary-700 border border-primary-100 rounded-full px-2.5 py-0.5">
+                          Seat: {item.selected_seat_size}
+                        </span>
+                      )}
+                      {item.selected_width && (
+                        <span className="text-xs bg-primary-50 text-primary-700 border border-primary-100 rounded-full px-2.5 py-0.5">
+                          Width: {item.selected_width}
+                        </span>
+                      )}
+                      {item.selected_color && (
+                        <span className="text-xs bg-primary-50 text-primary-700 border border-primary-100 rounded-full px-2.5 py-0.5">
+                          Color: {item.selected_color}
+                        </span>
+                      )}
+                      {item.selected_tree_size && (
+                        <span className="text-xs bg-primary-50 text-primary-700 border border-primary-100 rounded-full px-2.5 py-0.5">
+                          Tree: {item.selected_tree_size}
+                        </span>
+                      )}
+                    </div>
+                  )}
+
                   <p className="text-lg font-bold text-primary-600 mb-3">
                     {formatPrice(item.product.price)}
                   </p>

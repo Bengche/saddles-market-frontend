@@ -138,6 +138,10 @@ export default function CheckoutPage() {
         items: cart!.items.map((i) => ({
           productId: i.product.id,
           quantity: i.quantity,
+          selectedSeatSize: i.selected_seat_size,
+          selectedColor: i.selected_color,
+          selectedTreeSize: i.selected_tree_size,
+          selectedWidth: i.selected_width,
         })),
         shippingAddress: data.shipping,
         billingAddress: data.billingSameAsShipping
@@ -561,6 +565,23 @@ export default function CheckoutPage() {
                         <p className="font-medium text-gray-900 truncate">
                           {item.product.name}
                         </p>
+                        {/* Variant summary */}
+                        {(item.selected_seat_size || item.selected_width || item.selected_color || item.selected_tree_size) && (
+                          <div className="flex flex-wrap gap-1 mt-0.5 mb-0.5">
+                            {item.selected_seat_size && (
+                              <span className="text-xs text-primary-600 bg-primary-50 rounded px-1.5 py-0.5">Seat: {item.selected_seat_size}</span>
+                            )}
+                            {item.selected_width && (
+                              <span className="text-xs text-primary-600 bg-primary-50 rounded px-1.5 py-0.5">Width: {item.selected_width}</span>
+                            )}
+                            {item.selected_color && (
+                              <span className="text-xs text-primary-600 bg-primary-50 rounded px-1.5 py-0.5">Color: {item.selected_color}</span>
+                            )}
+                            {item.selected_tree_size && (
+                              <span className="text-xs text-primary-600 bg-primary-50 rounded px-1.5 py-0.5">Tree: {item.selected_tree_size}</span>
+                            )}
+                          </div>
+                        )}
                         <p className="text-gray-400">Qty: {item.quantity}</p>
                       </div>
                       <p className="font-medium text-gray-900 whitespace-nowrap">

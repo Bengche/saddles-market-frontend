@@ -116,16 +116,35 @@ export default function OrdersPage() {
                 </div>
 
                 {/* Items preview */}
-                <div className="flex flex-wrap gap-2 mb-4">
+                <div className="flex flex-col gap-2 mb-4">
                   {order.items?.slice(0, 3).map((item) => (
                     <div
                       key={item.id}
-                      className="flex items-center gap-2 bg-cream-100 rounded-lg px-3 py-2"
+                      className="flex items-start gap-2 bg-cream-100 rounded-lg px-3 py-2"
                     >
-                      <span className="text-sm text-gray-700 truncate max-w-[180px]">
-                        {item.product_name}
-                      </span>
-                      <span className="text-xs text-gray-400">
+                      <div className="flex-1 min-w-0">
+                        <span className="text-sm text-gray-700 truncate max-w-[200px] block">
+                          {item.product_name}
+                        </span>
+                        {/* Variant summary */}
+                        {(item.seatSize || item.selectedWidth || item.selectedColor || item.selectedTreeSize) && (
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {item.seatSize && (
+                              <span className="text-xs bg-white text-primary-600 border border-primary-100 rounded px-1.5 py-0.5">Seat: {item.seatSize}</span>
+                            )}
+                            {item.selectedWidth && (
+                              <span className="text-xs bg-white text-primary-600 border border-primary-100 rounded px-1.5 py-0.5">Width: {item.selectedWidth}</span>
+                            )}
+                            {item.selectedColor && (
+                              <span className="text-xs bg-white text-primary-600 border border-primary-100 rounded px-1.5 py-0.5">Color: {item.selectedColor}</span>
+                            )}
+                            {item.selectedTreeSize && (
+                              <span className="text-xs bg-white text-primary-600 border border-primary-100 rounded px-1.5 py-0.5">Tree: {item.selectedTreeSize}</span>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                      <span className="text-xs text-gray-400 flex-shrink-0">
                         x{item.quantity}
                       </span>
                     </div>
