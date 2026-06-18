@@ -352,11 +352,11 @@ export default function AdminNewProductPage() {
 
           <TagInput
             label="Available Seat Sizes"
-            hint="e.g. 15\" 16\" 17\""
+            hint='e.g. 15" 16" 17"'
             tags={availableSeatSizes}
             onChange={setAvailableSeatSizes}
             presets={STANDARD_SEAT_SIZES}
-            placeholder={`e.g. 15.5\" or 16\"`}
+            placeholder='e.g. 15.5" or 16"'
           />
 
           <TagInput
