@@ -26,7 +26,7 @@ interface Stats {
   recentOrders: {
     id: string;
     created_at: string;
-    total_amount: number;
+    total: number;
     status: string;
     first_name: string;
     last_name: string;
@@ -201,7 +201,7 @@ export default function AdminDashboard() {
                       {new Date(order.created_at).toLocaleDateString()}
                     </td>
                     <td className="px-4 py-3 font-medium text-gray-900 sm:px-6">
-                      {formatPrice(Number(order.total_amount))}
+                      {formatPrice(Number(order.total))}
                     </td>
                     <td className="px-4 py-3 sm:px-6">
                       <span

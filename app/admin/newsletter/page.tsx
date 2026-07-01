@@ -60,8 +60,14 @@ export default function AdminNewsletterPage() {
 
   const sendBroadcast = async (data: BroadcastFormData) => {
     try {
-      await api.post("/admin/newsletter/broadcast", data);
-      showToast("Newsletter broadcast sent!", "success");
+      const res = await api.post("/admin/newsletter/broadcast", data);
+      const sentTo: number = res.data.sentTo ?? 0;
+      showToast(
+        sentTo > 0
+          ? `Sent to ${sentTo.toLocaleString()} subscriber${sentTo !== 1 ? "s" : ""}`
+          : "No active subscribers found.",
+        "success",
+      );
       reset();
       setBroadcastOpen(false);
     } catch (err) {

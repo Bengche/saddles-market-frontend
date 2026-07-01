@@ -14,10 +14,11 @@ interface Coupon {
   code: string;
   discount_type: "percentage" | "fixed";
   discount_value: number;
-  min_order_amount?: number;
-  usage_count: number;
+  minimum_order?: number;
+  maximum_discount?: number;
+  times_used: number;
   usage_limit?: number;
-  expires_at?: string;
+  valid_until?: string;
   is_active: boolean;
 }
 
@@ -28,7 +29,7 @@ const couponSchema = z.object({
     .max(20)
     .toUpperCase(),
   discount_type: z.enum(["percentage", "fixed"]),
-  discount_value: z.coerce.number().min(1, "Required").max(100),
+  discount_value: z.coerce.number().min(0.01, "Required"),
   min_order_amount: z.coerce.number().optional(),
   usage_limit: z.coerce.number().optional(),
   expires_at: z.string().optional(),
@@ -156,17 +157,17 @@ export default function AdminCouponsPage() {
                           : formatPrice(coupon.discount_value)}
                       </td>
                       <td className="px-5 py-3 text-gray-500">
-                        {coupon.min_order_amount
-                          ? formatPrice(coupon.min_order_amount)
+                        {coupon.minimum_order
+                          ? formatPrice(coupon.minimum_order)
                           : "—"}
                       </td>
                       <td className="px-5 py-3 text-gray-500">
-                        {coupon.usage_count}
+                        {coupon.times_used}
                         {coupon.usage_limit ? ` / ${coupon.usage_limit}` : ""}
                       </td>
                       <td className="px-5 py-3 text-gray-400">
-                        {coupon.expires_at
-                          ? new Date(coupon.expires_at).toLocaleDateString()
+                        {coupon.valid_until
+                          ? new Date(coupon.valid_until).toLocaleDateString()
                           : "—"}
                       </td>
                       <td className="px-5 py-3">

@@ -156,7 +156,10 @@ export default function AdminProductsPage() {
                       <td className="px-5 py-3">
                         <button
                           onClick={() =>
-                            handleToggleFeatured(product.id, product.is_featured)
+                            handleToggleFeatured(
+                              product.id,
+                              product.is_featured,
+                            )
                           }
                           className={`w-9 h-5 rounded-full transition-colors relative ${product.is_featured ? "bg-primary-500" : "bg-gray-200"}`}
                         >
