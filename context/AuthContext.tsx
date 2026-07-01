@@ -82,6 +82,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("sm_token", newToken);
     setToken(newToken);
     setUser(newUser);
+    // Merge any guest cart into the user's cart
+    const sessionId =
+      typeof window !== "undefined"
+        ? localStorage.getItem("sm_session_id")
+        : null;
+    if (sessionId) {
+      await api
+        .post("/cart/merge", { sessionId }, { headers: { Authorization: `Bearer ${newToken}` } })
+        .catch(() => {});
+    }
     showToast(`Welcome back, ${newUser.first_name}!`, "success");
   };
 

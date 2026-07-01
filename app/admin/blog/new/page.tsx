@@ -213,12 +213,17 @@ export default function AdminNewBlogPage() {
                   onChange={(e) => handleCoverUpload(e.target.files)}
                 />
                 {uploadingCover ? (
-                  <Loader2 size={24} className="animate-spin text-primary-500" />
+                  <Loader2
+                    size={24}
+                    className="animate-spin text-primary-500"
+                  />
                 ) : (
                   <Upload size={24} className="text-gray-400" />
                 )}
                 <p className="text-sm text-gray-500">
-                  {uploadingCover ? "Uploading…" : "Click to upload cover image"}
+                  {uploadingCover
+                    ? "Uploading…"
+                    : "Click to upload cover image"}
                 </p>
               </label>
             )}

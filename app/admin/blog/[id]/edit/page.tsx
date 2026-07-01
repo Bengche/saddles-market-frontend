@@ -51,8 +51,12 @@ export default function AdminEditBlogPage() {
         setIsPublished(p.is_published ?? false);
       })
       .catch((err) => showToast(getErrorMessage(err), "error"))
-      .finally(() => { if (mounted) setLoading(false); });
-    return () => { mounted = false; };
+      .finally(() => {
+        if (mounted) setLoading(false);
+      });
+    return () => {
+      mounted = false;
+    };
   }, [params.id, showToast]);
 
   const handleCoverUpload = async (files: FileList | null) => {
@@ -122,27 +126,51 @@ export default function AdminEditBlogPage() {
         <div className="rounded-2xl bg-white p-5 shadow-sm sm:p-7 space-y-5">
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
             <div className="md:col-span-2">
-              <label className="mb-1 block text-sm font-medium text-gray-700">Title *</label>
-              <input value={title} onChange={(e) => setTitle(e.target.value)} className="input-field" />
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Title *
+              </label>
+              <input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="input-field"
+              />
             </div>
 
             <div className="md:col-span-2">
               <label className="mb-1 block text-sm font-medium text-gray-700">
                 Slug
-                <span className="ml-2 text-xs text-gray-400 font-normal">Edit with care — changes URL</span>
+                <span className="ml-2 text-xs text-gray-400 font-normal">
+                  Edit with care — changes URL
+                </span>
               </label>
-              <input value={slug} onChange={(e) => setSlug(e.target.value)} className="input-field font-mono text-sm" />
+              <input
+                value={slug}
+                onChange={(e) => setSlug(e.target.value)}
+                className="input-field font-mono text-sm"
+              />
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Category</label>
-              <select className="input-field" value={category} onChange={(e) => setCategory(e.target.value)}>
-                {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Category
+              </label>
+              <select
+                className="input-field"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                {CATEGORIES.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
               </select>
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Reading Time (minutes)</label>
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Reading Time (minutes)
+              </label>
               <input
                 type="number"
                 min="1"
@@ -155,19 +183,32 @@ export default function AdminEditBlogPage() {
             <div className="md:col-span-2">
               <label className="mb-1 block text-sm font-medium text-gray-700">
                 Excerpt
-                <span className="ml-2 text-xs text-gray-400 font-normal">Short summary shown in listings</span>
+                <span className="ml-2 text-xs text-gray-400 font-normal">
+                  Short summary shown in listings
+                </span>
               </label>
-              <textarea value={excerpt} onChange={(e) => setExcerpt(e.target.value)} rows={2} className="input-field" />
+              <textarea
+                value={excerpt}
+                onChange={(e) => setExcerpt(e.target.value)}
+                rows={2}
+                className="input-field"
+              />
             </div>
           </div>
 
           {/* Cover image */}
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Cover Image</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Cover Image
+            </label>
             {coverImage ? (
               <div className="relative rounded-xl overflow-hidden">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={coverImage} alt="Cover" className="w-full max-h-56 object-cover rounded-xl" />
+                <img
+                  src={coverImage}
+                  alt="Cover"
+                  className="w-full max-h-56 object-cover rounded-xl"
+                />
                 <button
                   type="button"
                   onClick={() => setCoverImage("")}
@@ -179,7 +220,9 @@ export default function AdminEditBlogPage() {
             ) : (
               <label
                 className={`flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed px-6 py-8 cursor-pointer transition-colors ${
-                  uploadingCover ? "border-primary-300 bg-primary-50" : "border-gray-200 hover:border-primary-400 hover:bg-gray-50"
+                  uploadingCover
+                    ? "border-primary-300 bg-primary-50"
+                    : "border-gray-200 hover:border-primary-400 hover:bg-gray-50"
                 }`}
               >
                 <input
@@ -189,11 +232,18 @@ export default function AdminEditBlogPage() {
                   onChange={(e) => handleCoverUpload(e.target.files)}
                 />
                 {uploadingCover ? (
-                  <Loader2 size={24} className="animate-spin text-primary-500" />
+                  <Loader2
+                    size={24}
+                    className="animate-spin text-primary-500"
+                  />
                 ) : (
                   <Upload size={24} className="text-gray-400" />
                 )}
-                <p className="text-sm text-gray-500">{uploadingCover ? "Uploading…" : "Click to upload cover image"}</p>
+                <p className="text-sm text-gray-500">
+                  {uploadingCover
+                    ? "Uploading…"
+                    : "Click to upload cover image"}
+                </p>
               </label>
             )}
           </div>
@@ -201,7 +251,9 @@ export default function AdminEditBlogPage() {
 
         {/* Content */}
         <div className="rounded-2xl bg-white p-5 shadow-sm sm:p-7">
-          <label className="mb-2 block text-sm font-medium text-gray-700">Content *</label>
+          <label className="mb-2 block text-sm font-medium text-gray-700">
+            Content *
+          </label>
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
@@ -222,8 +274,17 @@ export default function AdminEditBlogPage() {
             />
             <span className="text-sm text-gray-700">Published</span>
           </label>
-          <Link href="/admin/blog" className="btn-secondary px-5 py-2 text-center text-sm">Cancel</Link>
-          <button type="submit" disabled={saving} className="btn-primary px-5 py-2 text-sm disabled:opacity-50">
+          <Link
+            href="/admin/blog"
+            className="btn-secondary px-5 py-2 text-center text-sm"
+          >
+            Cancel
+          </Link>
+          <button
+            type="submit"
+            disabled={saving}
+            className="btn-primary px-5 py-2 text-sm disabled:opacity-50"
+          >
             {saving ? "Saving…" : "Save Changes"}
           </button>
         </div>

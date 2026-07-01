@@ -63,6 +63,7 @@ export default function CheckoutPage() {
   const [placingOrder, setPlacingOrder] = useState(false);
   const [success, setSuccess] = useState(false);
   const [orderId, setOrderId] = useState<string | null>(null);
+  const [orderNumber, setOrderNumber] = useState<string | null>(null);
 
   const subtotal =
     cart?.items.reduce(
@@ -155,7 +156,8 @@ export default function CheckoutPage() {
       };
       const res = await api.post("/orders", payload);
       await clearCart();
-      setOrderId(res.data.order.id);
+      setOrderId(res.data.data.orderId);
+      setOrderNumber(res.data.data.orderNumber);
       setSuccess(true);
     } catch (err) {
       showToast(getErrorMessage(err), "error");
@@ -197,8 +199,8 @@ export default function CheckoutPage() {
             Thank you for your order. We&apos;ve sent a confirmation to your
             email.
           </p>
-          {orderId && (
-            <p className="text-sm text-gray-400 mb-6">Order #{orderId}</p>
+          {orderNumber && (
+            <p className="text-sm text-gray-400 mb-6">Order #{orderNumber}</p>
           )}
           <div className="flex flex-col gap-3">
             <Link href="/account/orders" className="btn-primary">

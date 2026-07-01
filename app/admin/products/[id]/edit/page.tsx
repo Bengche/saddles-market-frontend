@@ -30,8 +30,18 @@ const disciplines: SaddleDiscipline[] = [
 const conditions: SaddleCondition[] = ["new", "excellent", "good", "fair"];
 
 const STANDARD_SEAT_SIZES = [
-  '13"', '13.5"', '14"', '14.5"', '15"', '15.5"',
-  '16"', '16.5"', '17"', '17.5"', '18"', '18.5"',
+  '13"',
+  '13.5"',
+  '14"',
+  '14.5"',
+  '15"',
+  '15.5"',
+  '16"',
+  '16.5"',
+  '17"',
+  '17.5"',
+  '18"',
+  '18.5"',
 ];
 
 function TagInput({
@@ -65,7 +75,9 @@ function TagInput({
     <div>
       <label className="mb-1 block text-sm font-medium text-gray-700">
         {label}
-        {hint && <span className="ml-2 text-xs text-gray-400 font-normal">{hint}</span>}
+        {hint && (
+          <span className="ml-2 text-xs text-gray-400 font-normal">{hint}</span>
+        )}
       </label>
       {presets && (
         <div className="flex flex-wrap gap-1.5 mb-2">
@@ -93,7 +105,11 @@ function TagInput({
             className="flex items-center gap-1 bg-primary-50 text-primary-700 text-xs font-medium px-3 py-1.5 rounded-full border border-primary-200"
           >
             {t}
-            <button type="button" onClick={() => removeTag(t)} className="text-primary-400 hover:text-primary-600 ml-0.5">
+            <button
+              type="button"
+              onClick={() => removeTag(t)}
+              className="text-primary-400 hover:text-primary-600 ml-0.5"
+            >
               <X size={12} />
             </button>
           </span>
@@ -105,12 +121,19 @@ function TagInput({
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === ",") { e.preventDefault(); addTag(input); }
+            if (e.key === "Enter" || e.key === ",") {
+              e.preventDefault();
+              addTag(input);
+            }
           }}
           placeholder={placeholder ?? "Type and press Enter to add"}
           className="input-field text-sm flex-1"
         />
-        <button type="button" onClick={() => addTag(input)} className="btn-secondary px-3 py-2 text-sm flex items-center gap-1">
+        <button
+          type="button"
+          onClick={() => addTag(input)}
+          className="btn-secondary px-3 py-2 text-sm flex items-center gap-1"
+        >
           <Plus size={14} /> Add
         </button>
       </div>
@@ -167,7 +190,12 @@ export default function AdminEditProductPage() {
         setAvailableTreeSizes(p.available_tree_sizes ?? []);
         setUploadedImages(
           (p.images ?? []).map(
-            (img: { cloudinary_id: string; url: string; alt_text: string; is_primary: boolean }) => ({
+            (img: {
+              cloudinary_id: string;
+              url: string;
+              alt_text: string;
+              is_primary: boolean;
+            }) => ({
               cloudinaryId: img.cloudinary_id,
               url: img.url,
               altText: img.alt_text ?? "",
@@ -186,13 +214,18 @@ export default function AdminEditProductPage() {
     };
 
     load();
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, [params.id, showToast]);
 
   const handleImageFiles = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
     const remaining = 10 - uploadedImages.length;
-    if (remaining <= 0) { showToast("Maximum of 10 images allowed.", "error"); return; }
+    if (remaining <= 0) {
+      showToast("Maximum of 10 images allowed.", "error");
+      return;
+    }
     const fileArray = Array.from(files).slice(0, remaining);
     setUploading(true);
     try {
@@ -223,25 +256,38 @@ export default function AdminEditProductPage() {
 
   const removeImage = async (index: number) => {
     const img = uploadedImages[index];
-    try { await api.delete(`/upload/${encodeURIComponent(img.cloudinaryId)}`); } catch { /* non-critical */ }
+    try {
+      await api.delete(`/upload/${encodeURIComponent(img.cloudinaryId)}`);
+    } catch {
+      /* non-critical */
+    }
     setUploadedImages((prev) => {
       const next = prev.filter((_, i) => i !== index);
-      if (img.isPrimary && next.length > 0) next[0] = { ...next[0], isPrimary: true };
+      if (img.isPrimary && next.length > 0)
+        next[0] = { ...next[0], isPrimary: true };
       return next;
     });
   };
 
   const setPrimaryImage = (index: number) =>
-    setUploadedImages((prev) => prev.map((img, i) => ({ ...img, isPrimary: i === index })));
+    setUploadedImages((prev) =>
+      prev.map((img, i) => ({ ...img, isPrimary: i === index })),
+    );
 
   const canSubmit = useMemo(
-    () => name.trim().length > 1 && description.trim().length > 5 && Number(price) > 0,
+    () =>
+      name.trim().length > 1 &&
+      description.trim().length > 5 &&
+      Number(price) > 0,
     [name, description, price],
   );
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!canSubmit) { showToast("Please complete required fields.", "error"); return; }
+    if (!canSubmit) {
+      showToast("Please complete required fields.", "error");
+      return;
+    }
 
     setSaving(true);
     try {
@@ -257,12 +303,14 @@ export default function AdminEditProductPage() {
         availableSeatSizes,
         availableColors,
         availableTreeSizes,
-        images: uploadedImages.map(({ cloudinaryId, url, altText, isPrimary }) => ({
-          cloudinaryId,
-          url,
-          altText,
-          isPrimary,
-        })),
+        images: uploadedImages.map(
+          ({ cloudinaryId, url, altText, isPrimary }) => ({
+            cloudinaryId,
+            url,
+            altText,
+            isPrimary,
+          }),
+        ),
       });
       showToast("Product updated", "success");
       router.push("/admin/products");
@@ -287,20 +335,34 @@ export default function AdminEditProductPage() {
         <h1 className="font-serif text-2xl font-bold text-gray-900 sm:text-3xl">
           Edit Product
         </h1>
-        <Link href="/admin/products" className="btn-secondary px-4 py-2 text-sm">
+        <Link
+          href="/admin/products"
+          className="btn-secondary px-4 py-2 text-sm"
+        >
           Back
         </Link>
       </div>
 
-      <form onSubmit={submit} className="rounded-2xl bg-white p-5 shadow-sm sm:p-7">
+      <form
+        onSubmit={submit}
+        className="rounded-2xl bg-white p-5 shadow-sm sm:p-7"
+      >
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           <div className="md:col-span-2">
-            <label className="mb-1 block text-sm font-medium text-gray-700">Name *</label>
-            <input value={name} onChange={(e) => setName(e.target.value)} className="input-field" />
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Name *
+            </label>
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="input-field"
+            />
           </div>
 
           <div className="md:col-span-2">
-            <label className="mb-1 block text-sm font-medium text-gray-700">Description *</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Description *
+            </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -310,7 +372,9 @@ export default function AdminEditProductPage() {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Price *</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Price *
+            </label>
             <input
               type="number"
               min="0"
@@ -322,7 +386,9 @@ export default function AdminEditProductPage() {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Stock</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Stock
+            </label>
             <input
               type="number"
               min="0"
@@ -333,7 +399,9 @@ export default function AdminEditProductPage() {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Category</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Category
+            </label>
             <select
               className="input-field"
               value={categoryId}
@@ -341,40 +409,58 @@ export default function AdminEditProductPage() {
             >
               <option value="">— None —</option>
               {categories.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
               ))}
             </select>
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Discipline</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Discipline
+            </label>
             <select
               className="input-field"
               value={discipline}
-              onChange={(e) => setDiscipline(e.target.value as SaddleDiscipline)}
+              onChange={(e) =>
+                setDiscipline(e.target.value as SaddleDiscipline)
+              }
             >
               {disciplines.map((d) => (
-                <option key={d} value={d}>{d.replace("_", " ")}</option>
+                <option key={d} value={d}>
+                  {d.replace("_", " ")}
+                </option>
               ))}
             </select>
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Condition</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Condition
+            </label>
             <select
               className="input-field"
               value={condition}
               onChange={(e) => setCondition(e.target.value as SaddleCondition)}
             >
               {conditions.map((c) => (
-                <option key={c} value={c}>{c}</option>
+                <option key={c} value={c}>
+                  {c}
+                </option>
               ))}
             </select>
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Brand</label>
-            <input value={brand} onChange={(e) => setBrand(e.target.value)} className="input-field" />
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Brand
+            </label>
+            <input
+              value={brand}
+              onChange={(e) => setBrand(e.target.value)}
+              className="input-field"
+            />
           </div>
         </div>
 
@@ -424,7 +510,8 @@ export default function AdminEditProductPage() {
             </p>
             <p className="mt-1 text-xs text-gray-400">
               JPEG, PNG, or WebP · Max 10 MB each. The image marked{" "}
-              <span className="font-medium text-amber-600">Main</span> will be the primary listing photo.
+              <span className="font-medium text-amber-600">Main</span> will be
+              the primary listing photo.
             </p>
           </div>
 
@@ -437,7 +524,10 @@ export default function AdminEditProductPage() {
             }`}
             onClick={() => !uploading && fileInputRef.current?.click()}
             onDragOver={(e) => e.preventDefault()}
-            onDrop={(e) => { e.preventDefault(); handleImageFiles(e.dataTransfer.files); }}
+            onDrop={(e) => {
+              e.preventDefault();
+              handleImageFiles(e.dataTransfer.files);
+            }}
           >
             <input
               ref={fileInputRef}
@@ -453,10 +543,14 @@ export default function AdminEditProductPage() {
               <Upload size={28} className="text-gray-400" />
             )}
             <p className="text-sm text-gray-500">
-              {uploading ? "Uploading…" : "Click to select or drag & drop images here"}
+              {uploading
+                ? "Uploading…"
+                : "Click to select or drag & drop images here"}
             </p>
             {uploadedImages.length > 0 && !uploading && (
-              <p className="text-xs text-gray-400">{uploadedImages.length} / 10 uploaded</p>
+              <p className="text-xs text-gray-400">
+                {uploadedImages.length} / 10 uploaded
+              </p>
             )}
           </div>
 
@@ -467,7 +561,9 @@ export default function AdminEditProductPage() {
                 <div
                   key={img.cloudinaryId}
                   className={`relative rounded-xl overflow-hidden border-2 transition-all ${
-                    img.isPrimary ? "border-amber-400 shadow-md" : "border-gray-200"
+                    img.isPrimary
+                      ? "border-amber-400 shadow-md"
+                      : "border-gray-200"
                   }`}
                 >
                   <div className="aspect-square relative bg-gray-50">
@@ -513,7 +609,10 @@ export default function AdminEditProductPage() {
 
         {/* ─── Submit ────────────────────────────────────────────────── */}
         <div className="mt-7 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-          <Link href="/admin/products" className="btn-secondary px-5 py-2 text-center text-sm">
+          <Link
+            href="/admin/products"
+            className="btn-secondary px-5 py-2 text-center text-sm"
+          >
             Cancel
           </Link>
           <button

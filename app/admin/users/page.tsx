@@ -149,7 +149,11 @@ export default function AdminUsersPage() {
                       <td className="px-5 py-3">
                         <button
                           onClick={() => toggleAdmin(user.id, user.role)}
-                          title={user.role === "admin" ? "Revoke admin" : "Grant admin"}
+                          title={
+                            user.role === "admin"
+                              ? "Revoke admin"
+                              : "Grant admin"
+                          }
                           className={`p-1.5 rounded-lg transition-colors ${user.role === "admin" ? "bg-gold-100 text-gold-600 hover:bg-gold-200" : "bg-gray-100 text-gray-400 hover:bg-gray-200"}`}
                         >
                           {user.role === "admin" ? (
