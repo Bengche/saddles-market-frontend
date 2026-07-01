@@ -121,7 +121,10 @@ export default function CartPage() {
                   </Link>
 
                   {/* Selected variant summary */}
-                  {(item.selected_seat_size || item.selected_color || item.selected_tree_size || item.selected_width) && (
+                  {(item.selected_seat_size ||
+                    item.selected_color ||
+                    item.selected_tree_size ||
+                    item.selected_width) && (
                     <div className="flex flex-wrap gap-1.5 mb-2">
                       {item.selected_seat_size && (
                         <span className="text-xs bg-primary-50 text-primary-700 border border-primary-100 rounded-full px-2.5 py-0.5">

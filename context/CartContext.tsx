@@ -21,7 +21,11 @@ interface ProductSelections {
 interface CartContextType {
   cart: Cart;
   loading: boolean;
-  addToCart: (productId: string, quantity?: number, selections?: ProductSelections) => Promise<void>;
+  addToCart: (
+    productId: string,
+    quantity?: number,
+    selections?: ProductSelections,
+  ) => Promise<void>;
   updateItem: (itemId: string, quantity: number) => Promise<void>;
   removeItem: (itemId: string) => Promise<void>;
   clearCart: () => Promise<void>;
@@ -83,7 +87,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, [refreshCart]);
 
-  const addToCart = async (productId: string, quantity = 1, selections?: ProductSelections) => {
+  const addToCart = async (
+    productId: string,
+    quantity = 1,
+    selections?: ProductSelections,
+  ) => {
     setLoading(true);
     try {
       await api.post("/cart/add", { productId, quantity, ...selections });

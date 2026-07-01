@@ -566,19 +566,30 @@ export default function CheckoutPage() {
                           {item.product.name}
                         </p>
                         {/* Variant summary */}
-                        {(item.selected_seat_size || item.selected_width || item.selected_color || item.selected_tree_size) && (
+                        {(item.selected_seat_size ||
+                          item.selected_width ||
+                          item.selected_color ||
+                          item.selected_tree_size) && (
                           <div className="flex flex-wrap gap-1 mt-0.5 mb-0.5">
                             {item.selected_seat_size && (
-                              <span className="text-xs text-primary-600 bg-primary-50 rounded px-1.5 py-0.5">Seat: {item.selected_seat_size}</span>
+                              <span className="text-xs text-primary-600 bg-primary-50 rounded px-1.5 py-0.5">
+                                Seat: {item.selected_seat_size}
+                              </span>
                             )}
                             {item.selected_width && (
-                              <span className="text-xs text-primary-600 bg-primary-50 rounded px-1.5 py-0.5">Width: {item.selected_width}</span>
+                              <span className="text-xs text-primary-600 bg-primary-50 rounded px-1.5 py-0.5">
+                                Width: {item.selected_width}
+                              </span>
                             )}
                             {item.selected_color && (
-                              <span className="text-xs text-primary-600 bg-primary-50 rounded px-1.5 py-0.5">Color: {item.selected_color}</span>
+                              <span className="text-xs text-primary-600 bg-primary-50 rounded px-1.5 py-0.5">
+                                Color: {item.selected_color}
+                              </span>
                             )}
                             {item.selected_tree_size && (
-                              <span className="text-xs text-primary-600 bg-primary-50 rounded px-1.5 py-0.5">Tree: {item.selected_tree_size}</span>
+                              <span className="text-xs text-primary-600 bg-primary-50 rounded px-1.5 py-0.5">
+                                Tree: {item.selected_tree_size}
+                              </span>
                             )}
                           </div>
                         )}

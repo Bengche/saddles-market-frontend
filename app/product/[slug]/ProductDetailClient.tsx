@@ -33,11 +33,15 @@ import ProductCard from "@/components/product/ProductCard";
 
 // Standard horse saddle width options — shown on every product
 const SADDLE_WIDTHS = [
-  { value: "Narrow (C)", label: "Narrow", sub: "C / 4.5\"" },
-  { value: "Regular / Medium (D)", label: "Regular / Medium", sub: "D / 5\"" },
-  { value: "Wide (W)", label: "Wide", sub: "W / 5.5\"" },
-  { value: "Extra Wide (XW)", label: "Extra Wide", sub: "XW / 6\"" },
-  { value: "Extra Extra Wide (XXW)", label: "Extra Extra Wide", sub: "XXW / 6.5\"" },
+  { value: "Narrow (C)", label: "Narrow", sub: 'C / 4.5"' },
+  { value: "Regular / Medium (D)", label: "Regular / Medium", sub: 'D / 5"' },
+  { value: "Wide (W)", label: "Wide", sub: 'W / 5.5"' },
+  { value: "Extra Wide (XW)", label: "Extra Wide", sub: 'XW / 6"' },
+  {
+    value: "Extra Extra Wide (XXW)",
+    label: "Extra Extra Wide",
+    sub: 'XXW / 6.5"',
+  },
 ];
 
 interface Props {
@@ -357,7 +361,9 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
                 <p className="text-sm font-semibold text-gray-800 mb-2">
                   Seat Size
                   {selectedSeatSize && (
-                    <span className="ml-2 text-primary-600 font-normal">— {selectedSeatSize}</span>
+                    <span className="ml-2 text-primary-600 font-normal">
+                      — {selectedSeatSize}
+                    </span>
                   )}
                 </p>
                 <div className="flex flex-wrap gap-2">
@@ -384,7 +390,9 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
               <p className="text-sm font-semibold text-gray-800 mb-1">
                 Gullet / Width
                 {selectedWidth && (
-                  <span className="ml-2 text-primary-600 font-normal">— {selectedWidth}</span>
+                  <span className="ml-2 text-primary-600 font-normal">
+                    — {selectedWidth}
+                  </span>
                 )}
               </p>
               <p className="text-xs text-gray-400 mb-2">
@@ -411,7 +419,9 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
                     }`}
                   >
                     <span className="font-medium">{w.label}</span>
-                    <span className={`text-xs ${selectedWidth === w.value ? "text-primary-200" : "text-gray-400"}`}>
+                    <span
+                      className={`text-xs ${selectedWidth === w.value ? "text-primary-200" : "text-gray-400"}`}
+                    >
                       {w.sub}
                     </span>
                   </button>
@@ -425,7 +435,9 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
                 <p className="text-sm font-semibold text-gray-800 mb-2">
                   Color
                   {selectedColor && (
-                    <span className="ml-2 text-primary-600 font-normal">— {selectedColor}</span>
+                    <span className="ml-2 text-primary-600 font-normal">
+                      — {selectedColor}
+                    </span>
                   )}
                 </p>
                 <div className="flex flex-wrap gap-2">
@@ -453,7 +465,9 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
                 <p className="text-sm font-semibold text-gray-800 mb-2">
                   Tree Size
                   {selectedTreeSize && (
-                    <span className="ml-2 text-primary-600 font-normal">— {selectedTreeSize}</span>
+                    <span className="ml-2 text-primary-600 font-normal">
+                      — {selectedTreeSize}
+                    </span>
                   )}
                 </p>
                 <div className="flex flex-wrap gap-2">
@@ -517,12 +531,36 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
             {/* Trust badges */}
             <div className="grid grid-cols-2 gap-3 mb-6">
               {[
-                { icon: Shield, text: "30-Day Ride Trial", sub: "Ride it before you keep it" },
-                { icon: RotateCcw, text: "Free Returns", sub: "Hassle-free return process" },
-                { icon: Truck, text: "Free Shipping $500+", sub: "Fast, insured delivery" },
-                { icon: Award, text: "Authenticity Guaranteed", sub: "Every saddle vetted" },
-                { icon: Lock, text: "Secure Checkout", sub: "256-bit SSL encryption" },
-                { icon: Package, text: "Expert Packing", sub: "Arrives safely, protected" },
+                {
+                  icon: Shield,
+                  text: "30-Day Ride Trial",
+                  sub: "Ride it before you keep it",
+                },
+                {
+                  icon: RotateCcw,
+                  text: "Free Returns",
+                  sub: "Hassle-free return process",
+                },
+                {
+                  icon: Truck,
+                  text: "Free Shipping $500+",
+                  sub: "Fast, insured delivery",
+                },
+                {
+                  icon: Award,
+                  text: "Authenticity Guaranteed",
+                  sub: "Every saddle vetted",
+                },
+                {
+                  icon: Lock,
+                  text: "Secure Checkout",
+                  sub: "256-bit SSL encryption",
+                },
+                {
+                  icon: Package,
+                  text: "Expert Packing",
+                  sub: "Arrives safely, protected",
+                },
               ].map(({ icon: Icon, text, sub }) => (
                 <div
                   key={text}
@@ -532,8 +570,12 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
                     <Icon size={16} className="text-primary-500" />
                   </div>
                   <div>
-                    <p className="text-xs font-semibold text-gray-800 leading-tight">{text}</p>
-                    <p className="text-xs text-gray-400 leading-tight mt-0.5">{sub}</p>
+                    <p className="text-xs font-semibold text-gray-800 leading-tight">
+                      {text}
+                    </p>
+                    <p className="text-xs text-gray-400 leading-tight mt-0.5">
+                      {sub}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -541,27 +583,44 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
 
             {/* Policy links */}
             <div className="flex flex-col gap-2 p-4 bg-cream-50 border border-cream-200 rounded-xl mb-5">
-              <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1">Policies</p>
+              <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1">
+                Policies
+              </p>
               <Link
                 href="/shipping-policy"
                 className="flex items-center gap-2 text-sm text-gray-600 hover:text-primary-600 transition-colors group"
               >
-                <Truck size={14} className="text-primary-400 group-hover:text-primary-600 flex-shrink-0" />
-                <span className="group-hover:underline">Shipping Policy — rates, timelines & carriers</span>
+                <Truck
+                  size={14}
+                  className="text-primary-400 group-hover:text-primary-600 flex-shrink-0"
+                />
+                <span className="group-hover:underline">
+                  Shipping Policy — rates, timelines & carriers
+                </span>
               </Link>
               <Link
                 href="/returns-refunds"
                 className="flex items-center gap-2 text-sm text-gray-600 hover:text-primary-600 transition-colors group"
               >
-                <RefreshCw size={14} className="text-primary-400 group-hover:text-primary-600 flex-shrink-0" />
-                <span className="group-hover:underline">Returns &amp; Refunds — 30-day ride trial details</span>
+                <RefreshCw
+                  size={14}
+                  className="text-primary-400 group-hover:text-primary-600 flex-shrink-0"
+                />
+                <span className="group-hover:underline">
+                  Returns &amp; Refunds — 30-day ride trial details
+                </span>
               </Link>
               <Link
                 href="/terms-conditions"
                 className="flex items-center gap-2 text-sm text-gray-600 hover:text-primary-600 transition-colors group"
               >
-                <FileText size={14} className="text-primary-400 group-hover:text-primary-600 flex-shrink-0" />
-                <span className="group-hover:underline">Terms &amp; Conditions</span>
+                <FileText
+                  size={14}
+                  className="text-primary-400 group-hover:text-primary-600 flex-shrink-0"
+                />
+                <span className="group-hover:underline">
+                  Terms &amp; Conditions
+                </span>
               </Link>
             </div>
 

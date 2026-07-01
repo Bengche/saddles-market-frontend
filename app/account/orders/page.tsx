@@ -127,19 +127,30 @@ export default function OrdersPage() {
                           {item.product_name}
                         </span>
                         {/* Variant summary */}
-                        {(item.seatSize || item.selectedWidth || item.selectedColor || item.selectedTreeSize) && (
+                        {(item.seatSize ||
+                          item.selectedWidth ||
+                          item.selectedColor ||
+                          item.selectedTreeSize) && (
                           <div className="flex flex-wrap gap-1 mt-1">
                             {item.seatSize && (
-                              <span className="text-xs bg-white text-primary-600 border border-primary-100 rounded px-1.5 py-0.5">Seat: {item.seatSize}</span>
+                              <span className="text-xs bg-white text-primary-600 border border-primary-100 rounded px-1.5 py-0.5">
+                                Seat: {item.seatSize}
+                              </span>
                             )}
                             {item.selectedWidth && (
-                              <span className="text-xs bg-white text-primary-600 border border-primary-100 rounded px-1.5 py-0.5">Width: {item.selectedWidth}</span>
+                              <span className="text-xs bg-white text-primary-600 border border-primary-100 rounded px-1.5 py-0.5">
+                                Width: {item.selectedWidth}
+                              </span>
                             )}
                             {item.selectedColor && (
-                              <span className="text-xs bg-white text-primary-600 border border-primary-100 rounded px-1.5 py-0.5">Color: {item.selectedColor}</span>
+                              <span className="text-xs bg-white text-primary-600 border border-primary-100 rounded px-1.5 py-0.5">
+                                Color: {item.selectedColor}
+                              </span>
                             )}
                             {item.selectedTreeSize && (
-                              <span className="text-xs bg-white text-primary-600 border border-primary-100 rounded px-1.5 py-0.5">Tree: {item.selectedTreeSize}</span>
+                              <span className="text-xs bg-white text-primary-600 border border-primary-100 rounded px-1.5 py-0.5">
+                                Tree: {item.selectedTreeSize}
+                              </span>
                             )}
                           </div>
                         )}

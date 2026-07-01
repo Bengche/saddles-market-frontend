@@ -3,10 +3,18 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { X, Plus } from "lucide-react";
+import { X, Plus, Upload, Star, Loader2 } from "lucide-react";
+import Image from "next/image";
 import api, { getErrorMessage } from "@/lib/api";
 import { useToast } from "@/context/ToastContext";
 import type { Category, SaddleCondition, SaddleDiscipline } from "@/types";
+
+interface UploadedImage {
+  cloudinaryId: string;
+  url: string;
+  altText: string;
+  isPrimary: boolean;
+}
 
 const disciplines: SaddleDiscipline[] = [
   "western",
@@ -22,8 +30,18 @@ const disciplines: SaddleDiscipline[] = [
 const conditions: SaddleCondition[] = ["new", "excellent", "good", "fair"];
 
 const STANDARD_SEAT_SIZES = [
-  "13\"", "13.5\"", "14\"", "14.5\"", "15\"", "15.5\"",
-  "16\"", "16.5\"", "17\"", "17.5\"", "18\"", "18.5\"",
+  '13"',
+  '13.5"',
+  '14"',
+  '14.5"',
+  '15"',
+  '15.5"',
+  '16"',
+  '16.5"',
+  '17"',
+  '17.5"',
+  '18"',
+  '18.5"',
 ];
 
 /** Reusable tag-input component for multi-value fields */
@@ -60,7 +78,9 @@ function TagInput({
     <div>
       <label className="mb-1 block text-sm font-medium text-gray-700">
         {label}
-        {hint && <span className="ml-2 text-xs text-gray-400 font-normal">{hint}</span>}
+        {hint && (
+          <span className="ml-2 text-xs text-gray-400 font-normal">{hint}</span>
+        )}
       </label>
       {/* Preset quick-add chips */}
       {presets && (
@@ -90,7 +110,11 @@ function TagInput({
             className="flex items-center gap-1 bg-primary-50 text-primary-700 text-xs font-medium px-3 py-1.5 rounded-full border border-primary-200"
           >
             {t}
-            <button type="button" onClick={() => removeTag(t)} className="text-primary-400 hover:text-primary-600 ml-0.5">
+            <button
+              type="button"
+              onClick={() => removeTag(t)}
+              className="text-primary-400 hover:text-primary-600 ml-0.5"
+            >
               <X size={12} />
             </button>
           </span>
@@ -129,7 +153,10 @@ export default function AdminNewProductPage() {
 
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -167,6 +194,64 @@ export default function AdminNewProductPage() {
     };
   }, [showToast]);
 
+  const handleImageFiles = async (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    const remaining = 10 - uploadedImages.length;
+    if (remaining <= 0) {
+      showToast("Maximum of 10 images allowed.", "error");
+      return;
+    }
+    const fileArray = Array.from(files).slice(0, remaining);
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      fileArray.forEach((file) => formData.append("images", file));
+      const res = await api.post("/upload/products", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      const incoming: { cloudinaryId: string; url: string; altText: string }[] =
+        res.data?.data?.images ?? [];
+      setUploadedImages((prev) => {
+        const isFirstBatch = prev.length === 0;
+        return [
+          ...prev,
+          ...incoming.map((img, idx) => ({
+            ...img,
+            isPrimary: isFirstBatch && idx === 0,
+          })),
+        ];
+      });
+    } catch (err) {
+      showToast(getErrorMessage(err), "error");
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  const removeImage = async (index: number) => {
+    const img = uploadedImages[index];
+    try {
+      await api.delete(`/upload/${encodeURIComponent(img.cloudinaryId)}`);
+    } catch {
+      // Non-critical — still remove from UI
+    }
+    setUploadedImages((prev) => {
+      const next = prev.filter((_, i) => i !== index);
+      // If we removed the primary, promote the new first image
+      if (img.isPrimary && next.length > 0) {
+        next[0] = { ...next[0], isPrimary: true };
+      }
+      return next;
+    });
+  };
+
+  const setPrimaryImage = (index: number) => {
+    setUploadedImages((prev) =>
+      prev.map((img, i) => ({ ...img, isPrimary: i === index })),
+    );
+  };
+
   const canSubmit = useMemo(
     () =>
       name.trim().length > 1 &&
@@ -196,6 +281,14 @@ export default function AdminNewProductPage() {
         availableSeatSizes,
         availableColors,
         availableTreeSizes,
+        images: uploadedImages.map(
+          ({ cloudinaryId, url, altText, isPrimary }) => ({
+            cloudinaryId,
+            url,
+            altText,
+            isPrimary,
+          }),
+        ),
       });
       showToast("Product created", "success");
       router.push("/admin/products");
@@ -376,6 +469,118 @@ export default function AdminNewProductPage() {
           />
         </div>
 
+        {/* ─── Images ──────────────────────────────────────────────── */}
+        <div className="mt-7 border-t border-gray-100 pt-7 space-y-5">
+          <div>
+            <p className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
+              Product Images
+              <span className="ml-2 text-xs font-normal text-gray-400 normal-case">
+                Up to 10 images — stored on Cloudinary
+              </span>
+            </p>
+            <p className="mt-1 text-xs text-gray-400">
+              JPEG, PNG, or WebP · Max 10 MB each. The image marked{" "}
+              <span className="font-medium text-amber-600">Main</span> will be
+              the primary listing photo.
+            </p>
+          </div>
+
+          {/* Upload zone */}
+          <div
+            className={`relative flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed px-6 py-8 transition-colors ${
+              uploading
+                ? "border-primary-300 bg-primary-50"
+                : "border-gray-200 hover:border-primary-400 hover:bg-gray-50 cursor-pointer"
+            }`}
+            onClick={() => !uploading && fileInputRef.current?.click()}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={(e) => {
+              e.preventDefault();
+              handleImageFiles(e.dataTransfer.files);
+            }}
+          >
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              multiple
+              className="hidden"
+              onChange={(e) => handleImageFiles(e.target.files)}
+            />
+            {uploading ? (
+              <Loader2 size={28} className="animate-spin text-primary-500" />
+            ) : (
+              <Upload size={28} className="text-gray-400" />
+            )}
+            <p className="text-sm text-gray-500">
+              {uploading
+                ? "Uploading…"
+                : "Click to select or drag & drop images here"}
+            </p>
+            {uploadedImages.length > 0 && !uploading && (
+              <p className="text-xs text-gray-400">
+                {uploadedImages.length} / 10 uploaded
+              </p>
+            )}
+          </div>
+
+          {/* Preview grid */}
+          {uploadedImages.length > 0 && (
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+              {uploadedImages.map((img, idx) => (
+                <div
+                  key={img.cloudinaryId}
+                  className={`relative rounded-xl overflow-hidden border-2 transition-all ${
+                    img.isPrimary
+                      ? "border-amber-400 shadow-md"
+                      : "border-gray-200"
+                  }`}
+                >
+                  <div className="aspect-square relative bg-gray-50">
+                    <Image
+                      src={img.url}
+                      alt={img.altText || `Product image ${idx + 1}`}
+                      fill
+                      className="object-cover"
+                      sizes="200px"
+                    />
+                  </div>
+
+                  {/* Primary badge */}
+                  {img.isPrimary && (
+                    <div className="absolute top-1.5 left-1.5 flex items-center gap-1 bg-amber-400 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full shadow">
+                      <Star size={9} fill="white" />
+                      Main
+                    </div>
+                  )}
+
+                  {/* Remove button */}
+                  <button
+                    type="button"
+                    onClick={() => removeImage(idx)}
+                    className="absolute top-1.5 right-1.5 bg-white/80 hover:bg-red-50 text-gray-500 hover:text-red-600 rounded-full p-1 shadow transition-colors"
+                    aria-label="Remove image"
+                  >
+                    <X size={12} />
+                  </button>
+
+                  {/* Set as main button */}
+                  {!img.isPrimary && (
+                    <button
+                      type="button"
+                      onClick={() => setPrimaryImage(idx)}
+                      className="absolute bottom-0 left-0 right-0 bg-black/50 hover:bg-black/70 text-white text-[11px] font-medium py-1.5 transition-colors"
+                    >
+                      Set as Main
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* ─── Submit ───────────────────────────────────────────────── */}
         <div className="mt-7 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
           <Link
             href="/admin/products"
