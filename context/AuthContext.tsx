@@ -89,7 +89,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         : null;
     if (sessionId) {
       await api
-        .post("/cart/merge", { sessionId }, { headers: { Authorization: `Bearer ${newToken}` } })
+        .post(
+          "/cart/merge",
+          { sessionId },
+          { headers: { Authorization: `Bearer ${newToken}` } },
+        )
         .catch(() => {});
     }
     showToast(`Welcome back, ${newUser.first_name}!`, "success");
