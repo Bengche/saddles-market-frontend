@@ -100,7 +100,7 @@ export default function BlogPreviewSection() {
                         {post.category}
                       </span>
                       <span className="flex items-center gap-1 text-xs text-gray-400">
-                        <Clock size={12} /> {post.read_time} min read
+                        <Clock size={12} /> {post.reading_time} min read
                       </span>
                     </div>
 

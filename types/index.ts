@@ -75,7 +75,7 @@ export interface Product {
   weight_kg?: number;
   color?: string;
   material?: string;
-  featured: boolean;
+  is_featured: boolean;
   is_active: boolean;
   avg_rating: number;
   review_count: number;
@@ -202,8 +202,8 @@ export interface BlogPost {
   cover_image?: string;
   category: string;
   author_name: string;
-  read_time: number;
-  published: boolean;
+  reading_time: number;
+  is_published: boolean;
   published_at: string;
   seo_title?: string;
   seo_description?: string;

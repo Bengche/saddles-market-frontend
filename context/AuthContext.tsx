@@ -86,7 +86,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const register = async (data: RegisterData) => {
-    const res = await api.post("/auth/register", data);
+    await api.post("/auth/register", {
+      firstName: data.first_name,
+      lastName: data.last_name,
+      email: data.email,
+      password: data.password,
+      newsletterOptIn: data.newsletter ?? false,
+    });
     return { requiresVerification: true, email: data.email };
   };
 

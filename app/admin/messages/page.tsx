@@ -26,7 +26,7 @@ export default function AdminMessagesPage() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await api.get("/api/admin/messages", {
+      const res = await api.get("/admin/messages", {
         params: { unread: filter === "unread" ? true : undefined, limit: 50 },
       });
       setMessages(res.data.messages ?? []);
@@ -54,7 +54,7 @@ export default function AdminMessagesPage() {
 
   const deleteMessage = async (id: string) => {
     try {
-      await api.delete(`/api/admin/messages/${id}`);
+      await api.delete(`/admin/messages/${id}`);
       setMessages((prev) => prev.filter((m) => m.id !== id));
       showToast("Message deleted", "success");
     } catch (err) {

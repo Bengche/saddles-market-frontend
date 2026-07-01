@@ -11,8 +11,8 @@ interface AdminUser {
   last_name: string;
   email: string;
   phone?: string;
+  role: string;
   is_active: boolean;
-  is_admin: boolean;
   created_at: string;
 }
 
@@ -55,13 +55,16 @@ export default function AdminUsersPage() {
     }
   };
 
-  const toggleAdmin = async (id: string, current: boolean) => {
+  const toggleAdmin = async (id: string, currentRole: string) => {
+    const makeAdmin = currentRole !== "admin";
     try {
-      await api.patch(`/admin/users/${id}`, { is_admin: !current });
+      await api.patch(`/admin/users/${id}`, { is_admin: makeAdmin });
       setUsers((prev) =>
-        prev.map((u) => (u.id === id ? { ...u, is_admin: !current } : u)),
+        prev.map((u) =>
+          u.id === id ? { ...u, role: makeAdmin ? "admin" : "customer" } : u,
+        ),
       );
-      showToast(`Admin status ${!current ? "granted" : "revoked"}`, "success");
+      showToast(`Admin status ${makeAdmin ? "granted" : "revoked"}`, "success");
     } catch (err) {
       showToast(getErrorMessage(err), "error");
     }
@@ -145,11 +148,11 @@ export default function AdminUsersPage() {
                       </td>
                       <td className="px-5 py-3">
                         <button
-                          onClick={() => toggleAdmin(user.id, user.is_admin)}
-                          title={user.is_admin ? "Revoke admin" : "Grant admin"}
-                          className={`p-1.5 rounded-lg transition-colors ${user.is_admin ? "bg-gold-100 text-gold-600 hover:bg-gold-200" : "bg-gray-100 text-gray-400 hover:bg-gray-200"}`}
+                          onClick={() => toggleAdmin(user.id, user.role)}
+                          title={user.role === "admin" ? "Revoke admin" : "Grant admin"}
+                          className={`p-1.5 rounded-lg transition-colors ${user.role === "admin" ? "bg-gold-100 text-gold-600 hover:bg-gold-200" : "bg-gray-100 text-gray-400 hover:bg-gray-200"}`}
                         >
-                          {user.is_admin ? (
+                          {user.role === "admin" ? (
                             <ShieldCheck size={16} />
                           ) : (
                             <ShieldOff size={16} />
