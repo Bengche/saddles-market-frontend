@@ -76,7 +76,7 @@ export default function ProductsClient() {
       Object.entries(filters).forEach(([k, v]) => {
         if (v) params.set(k, String(v));
       });
-      const res = await api.get(`/api/products?${params.toString()}`);
+      const res = await api.get(`/products?${params.toString()}`);
       setProducts(res.data.data?.products || []);
       setTotal(res.data.data?.pagination?.total || 0);
       setTotalPages(res.data.data?.pagination?.pages || 1);
