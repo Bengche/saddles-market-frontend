@@ -122,10 +122,10 @@ export default function AdminProductsPage() {
                     >
                       <td className="px-5 py-3">
                         <div className="flex items-center gap-3">
-                          {product.images?.[0] && (
+                          {product.primary_image && (
                             // eslint-disable-next-line @next/next/no-img-element
                             <img
-                              src={product.images[0].url}
+                              src={product.primary_image}
                               alt={product.name}
                               className="w-10 h-10 rounded-lg object-cover flex-shrink-0"
                             />
