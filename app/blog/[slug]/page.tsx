@@ -92,7 +92,7 @@ export default async function BlogPostPage({ params }: Props) {
                 {post.category}
               </span>
               <span className="flex items-center gap-1.5 text-sm text-gray-500">
-                <Clock size={14} /> {post.read_time} min read
+                <Clock size={14} /> {post.reading_time} min read
               </span>
               <span className="flex items-center gap-1.5 text-sm text-gray-500">
                 <Calendar size={14} /> {formatDate(post.published_at)}
