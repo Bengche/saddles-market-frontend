@@ -74,7 +74,9 @@ export default function ProductsClient() {
     try {
       const params = new URLSearchParams();
       Object.entries(filters).forEach(([k, v]) => {
-        if (v) params.set(k, String(v));
+        // Discipline/category filter is intentionally ignored until all
+        // categories are stocked — all saddles are always shown.
+        if (v && k !== "discipline") params.set(k, String(v));
       });
       const res = await api.get(`/products?${params.toString()}`);
       setProducts(res.data.data?.products || []);

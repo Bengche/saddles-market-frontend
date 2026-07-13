@@ -11,7 +11,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { ChevronRight, Lock, Tag, Truck, Zap } from "lucide-react";
+import { ChevronRight, Lock, Tag, Truck, Zap, CheckCircle } from "lucide-react";
 
 const addressSchema = z.object({
   firstName: z.string().min(1, "Required"),
@@ -25,15 +25,26 @@ const addressSchema = z.object({
   country: z.string().min(2, "Required"),
 });
 
-const checkoutSchema = z.object({
-  shipping: addressSchema,
-  billingSameAsShipping: z.boolean(),
-  billing: addressSchema.optional(),
-  shippingMethod: z.enum(["standard", "express", "free"]),
-  paymentMethod: z.enum(["card", "paypal", "bank_transfer"]),
-  couponCode: z.string().optional(),
-  notes: z.string().optional(),
-});
+const checkoutSchema = z
+  .object({
+    shipping: addressSchema,
+    billingSameAsShipping: z.boolean(),
+    billing: addressSchema.optional(),
+    shippingMethod: z.enum(["standard", "express", "free"]),
+    paymentMethod: z.enum(["paypal", "bank_transfer", "other"]),
+    paymentOtherDetails: z.string().optional(),
+    couponCode: z.string().optional(),
+    notes: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.paymentMethod === "other" && !data.paymentOtherDetails?.trim()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Please describe your payment method",
+        path: ["paymentOtherDetails"],
+      });
+    }
+  });
 
 type CheckoutFormData = z.infer<typeof checkoutSchema>;
 
@@ -91,18 +102,19 @@ export default function CheckoutPage() {
       },
       billingSameAsShipping: true,
       shippingMethod: freeShip ? "free" : "standard",
-      paymentMethod: "card",
+      paymentMethod: "bank_transfer",
     },
   });
 
   const billingSame = watch("billingSameAsShipping");
   const shippingMethod = watch("shippingMethod");
 
-  const shippingCost = freeShip
-    ? 0
-    : shippingMethod === "express"
-      ? SITE_CONFIG.shipping.expressRate
-      : SITE_CONFIG.shipping.standardRate;
+  const shippingCost =
+    shippingMethod === "free"
+      ? 0
+      : shippingMethod === "express"
+        ? SITE_CONFIG.shipping.expressRate
+        : SITE_CONFIG.shipping.standardRate;
   const total = subtotal + shippingCost - couponDiscount;
 
   const applyCoupon = async () => {
@@ -146,10 +158,15 @@ export default function CheckoutPage() {
           ? data.shipping
           : data.billing,
         billedSameAsShip: data.billingSameAsShipping,
-        shippingMethod: freeShip ? "free" : data.shippingMethod,
+        shippingMethod: data.shippingMethod,
         paymentMethod: data.paymentMethod,
         couponCode: couponCode || undefined,
-        customerNotes: data.notes,
+        customerNotes:
+          data.paymentMethod === "other" && data.paymentOtherDetails?.trim()
+            ? `Payment method: ${data.paymentOtherDetails.trim()}${
+                data.notes ? `\n${data.notes}` : ""
+              }`
+            : data.notes || undefined,
       };
       const res = await api.post("/orders", payload);
       await clearCart();
@@ -395,19 +412,37 @@ export default function CheckoutPage() {
 
               {/* Shipping Method */}
               <div className="bg-white rounded-2xl shadow-card p-7">
-                <h2 className="font-serif text-xl font-semibold text-gray-900 mb-6">
+                <h2 className="font-serif text-xl font-semibold text-gray-900 mb-4">
                   Shipping Method
                 </h2>
+
+                {freeShip && (
+                  <div className="flex items-start gap-2 text-sm text-green-700 bg-green-50 border border-green-200 rounded-xl px-4 py-3 mb-4">
+                    <CheckCircle size={15} className="flex-shrink-0 mt-0.5" />
+                    <span>
+                      Your order qualifies for <strong>free shipping</strong>.
+                      It is pre-selected below. You may choose a faster option
+                      if you prefer.
+                    </span>
+                  </div>
+                )}
+
                 <div className="space-y-3">
-                  {freeShip ? (
-                    <label className="flex items-center gap-4 p-4 rounded-xl border-2 border-primary-500 bg-primary-50 cursor-pointer">
+                  {freeShip && (
+                    <label
+                      className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-colors ${
+                        shippingMethod === "free"
+                          ? "border-primary-500 bg-primary-50"
+                          : "border-gray-100 hover:border-gray-200"
+                      }`}
+                    >
                       <input
                         type="radio"
                         value="free"
                         {...register("shippingMethod")}
                         className="accent-primary-500"
                       />
-                      <Truck size={18} className="text-primary-500" />
+                      <Truck size={18} className="text-green-500" />
                       <div className="flex-1">
                         <p className="font-medium text-gray-900">
                           Free Shipping
@@ -418,35 +453,33 @@ export default function CheckoutPage() {
                       </div>
                       <span className="font-semibold text-green-600">FREE</span>
                     </label>
-                  ) : (
-                    SHIPPING_OPTIONS.map((opt) => (
-                      <label
-                        key={opt.id}
-                        className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-colors ${shippingMethod === opt.id ? "border-primary-500 bg-primary-50" : "border-gray-100 hover:border-gray-200"}`}
-                      >
-                        <input
-                          type="radio"
-                          value={opt.id}
-                          {...register("shippingMethod")}
-                          className="accent-primary-500"
-                        />
-                        {opt.id === "express" ? (
-                          <Zap size={18} className="text-gold-400" />
-                        ) : (
-                          <Truck size={18} className="text-gray-400" />
-                        )}
-                        <div className="flex-1">
-                          <p className="font-medium text-gray-900">
-                            {opt.label}
-                          </p>
-                          <p className="text-sm text-gray-500">{opt.desc}</p>
-                        </div>
-                        <span className="font-semibold text-gray-900">
-                          {formatPrice(opt.price)}
-                        </span>
-                      </label>
-                    ))
                   )}
+
+                  {SHIPPING_OPTIONS.map((opt) => (
+                    <label
+                      key={opt.id}
+                      className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-colors ${shippingMethod === opt.id ? "border-primary-500 bg-primary-50" : "border-gray-100 hover:border-gray-200"}`}
+                    >
+                      <input
+                        type="radio"
+                        value={opt.id}
+                        {...register("shippingMethod")}
+                        className="accent-primary-500"
+                      />
+                      {opt.id === "express" ? (
+                        <Zap size={18} className="text-gold-400" />
+                      ) : (
+                        <Truck size={18} className="text-gray-400" />
+                      )}
+                      <div className="flex-1">
+                        <p className="font-medium text-gray-900">{opt.label}</p>
+                        <p className="text-sm text-gray-500">{opt.desc}</p>
+                      </div>
+                      <span className="font-semibold text-gray-900">
+                        {formatPrice(opt.price)}
+                      </span>
+                    </label>
+                  ))}
                 </div>
               </div>
 
@@ -458,9 +491,9 @@ export default function CheckoutPage() {
                 <div className="space-y-3">
                   {[
                     {
-                      id: "card",
-                      label: "Credit / Debit Card",
-                      desc: "Visa, Mastercard, Amex",
+                      id: "bank_transfer",
+                      label: "Bank Transfer",
+                      desc: "Our team will email payment details after you place your order",
                     },
                     {
                       id: "paypal",
@@ -468,14 +501,18 @@ export default function CheckoutPage() {
                       desc: "Pay with your PayPal account",
                     },
                     {
-                      id: "bank_transfer",
-                      label: "Bank Transfer",
-                      desc: "Instructions will be emailed after ordering",
+                      id: "other",
+                      label: "Other",
+                      desc: "Zelle, Venmo, crypto, or any other method",
                     },
                   ].map((pm) => (
                     <label
                       key={pm.id}
-                      className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-colors ${watch("paymentMethod") === pm.id ? "border-primary-500 bg-primary-50" : "border-gray-100 hover:border-gray-200"}`}
+                      className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-colors ${
+                        watch("paymentMethod") === pm.id
+                          ? "border-primary-500 bg-primary-50"
+                          : "border-gray-100 hover:border-gray-200"
+                      }`}
                     >
                       <input
                         type="radio"
@@ -489,6 +526,21 @@ export default function CheckoutPage() {
                       </div>
                     </label>
                   ))}
+
+                  {watch("paymentMethod") === "other" && (
+                    <div className="pt-1">
+                      <input
+                        {...register("paymentOtherDetails")}
+                        placeholder="Describe your payment method (e.g. Zelle, Venmo, Western Union...)"
+                        className="input-field"
+                      />
+                      {errors.paymentOtherDetails && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.paymentOtherDetails.message as string}
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
 
