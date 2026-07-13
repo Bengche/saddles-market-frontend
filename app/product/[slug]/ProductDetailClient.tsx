@@ -200,9 +200,9 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
         </div>
       </div>
 
-      <div className="container-custom py-10">
+      <div className="container-custom py-6 sm:py-10">
         {/* Main product section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-10 sm:mb-16">
           {/* Images */}
           <div className="space-y-4">
             <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-white shadow-card">
@@ -275,7 +275,7 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
               </Link>
             )}
 
-            <h1 className="font-serif text-3xl md:text-4xl font-bold text-primary-900 mb-4 leading-tight">
+            <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-primary-900 mb-4 leading-tight">
               {product.name}
             </h1>
 
@@ -309,7 +309,7 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
 
             {/* Price */}
             <div className="flex items-baseline gap-3 mb-6">
-              <span className="text-4xl font-bold text-primary-600">
+              <span className="text-3xl sm:text-4xl font-bold text-primary-600">
                 {formatPrice(product.price)}
               </span>
               {product.compare_price && (
@@ -490,41 +490,45 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
             )}
 
             {/* Quantity + Add to cart */}
-            <div className="flex items-center gap-4 mb-6">
-              <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-white">
+            <div className="mb-6">
+              {/* Row 1: qty stepper + wishlist */}
+              <div className="flex items-center gap-3 mb-3">
+                <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-white">
+                  <button
+                    onClick={() => setQty((q) => Math.max(1, q - 1))}
+                    className="px-4 py-3 text-gray-600 hover:bg-gray-50 text-lg"
+                  >
+                    −
+                  </button>
+                  <span className="px-5 py-3 font-semibold text-gray-900 min-w-[50px] text-center">
+                    {qty}
+                  </span>
+                  <button
+                    onClick={() =>
+                      setQty((q) => Math.min(product.stock_quantity, q + 1))
+                    }
+                    className="px-4 py-3 text-gray-600 hover:bg-gray-50 text-lg"
+                  >
+                    +
+                  </button>
+                </div>
+
                 <button
-                  onClick={() => setQty((q) => Math.max(1, q - 1))}
-                  className="px-4 py-3 text-gray-600 hover:bg-gray-50 text-lg"
+                  onClick={() => toggleFav(product.id)}
+                  className={`p-4 rounded-lg border transition-all ${isFav ? "border-red-300 bg-red-50 text-red-500" : "border-gray-200 bg-white text-gray-500 hover:border-red-300 hover:text-red-500"}`}
                 >
-                  −
-                </button>
-                <span className="px-5 py-3 font-semibold text-gray-900 min-w-[50px] text-center">
-                  {qty}
-                </span>
-                <button
-                  onClick={() =>
-                    setQty((q) => Math.min(product.stock_quantity, q + 1))
-                  }
-                  className="px-4 py-3 text-gray-600 hover:bg-gray-50 text-lg"
-                >
-                  +
+                  <Heart size={20} fill={isFav ? "currentColor" : "none"} />
                 </button>
               </div>
 
+              {/* Row 2: full-width add to cart */}
               <button
                 onClick={handleAddToCart}
                 disabled={cartLoading || product.stock_quantity === 0}
-                className="btn-primary flex-1 py-4 text-base disabled:opacity-60"
+                className="btn-primary w-full py-4 text-base disabled:opacity-60"
               >
                 <ShoppingCart size={20} />
                 {product.stock_quantity === 0 ? "Out of Stock" : "Add to Cart"}
-              </button>
-
-              <button
-                onClick={() => toggleFav(product.id)}
-                className={`p-4 rounded-lg border transition-all ${isFav ? "border-red-300 bg-red-50 text-red-500" : "border-gray-200 bg-white text-gray-500 hover:border-red-300 hover:text-red-500"}`}
-              >
-                <Heart size={20} fill={isFav ? "currentColor" : "none"} />
               </button>
             </div>
 
@@ -638,7 +642,7 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
         </div>
 
         {/* Description & Specs tabs */}
-        <div className="bg-white rounded-2xl shadow-card p-8 mb-10">
+        <div className="bg-white rounded-2xl shadow-card p-5 sm:p-8 mb-6 sm:mb-10">
           <h2 className="font-serif text-2xl font-bold text-primary-500 mb-6">
             Description
           </h2>
@@ -677,7 +681,7 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
         {/* Reviews */}
         <div
           id="reviews"
-          className="bg-white rounded-2xl shadow-card p-8 mb-10"
+          className="bg-white rounded-2xl shadow-card p-5 sm:p-8 mb-6 sm:mb-10"
         >
           <h2 className="font-serif text-2xl font-bold text-primary-500 mb-6">
             Reviews ({reviews.length})
@@ -694,7 +698,7 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
                   key={r.id}
                   className="border-b border-gray-100 pb-6 last:border-0 last:pb-0"
                 >
-                  <div className="flex items-start justify-between mb-2">
+                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 mb-2">
                     <div>
                       <div className="flex gap-0.5 mb-1">
                         {Array.from({ length: 5 }).map((_, i) => (
@@ -713,12 +717,12 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
                         {r.first_name} {r.last_name?.charAt(0)}.
                       </p>
                     </div>
-                    <div className="text-right">
+                    <div className="sm:text-right flex sm:flex-col items-center sm:items-end gap-2">
                       <p className="text-xs text-gray-400">
                         {new Date(r.created_at).toLocaleDateString()}
                       </p>
                       {r.is_verified && (
-                        <span className="badge bg-green-50 text-green-700 text-xs mt-1">
+                        <span className="badge bg-green-50 text-green-700 text-xs">
                           Verified Purchase
                         </span>
                       )}
@@ -825,7 +829,7 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
             <h2 className="font-serif text-2xl font-bold text-primary-500 mb-6">
               You May Also Like
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
               {relatedProducts.map((p) => (
                 <ProductCard key={p.id} product={p} />
               ))}
