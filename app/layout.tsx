@@ -51,7 +51,7 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
   icons: {
     icon: "/favicon.svg",
-    apple: "/apple-touch-icon.png",
+    apple: "/icon-app.svg",
   },
   manifest: "/manifest.json",
 };
