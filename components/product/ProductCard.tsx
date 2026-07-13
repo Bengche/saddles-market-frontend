@@ -60,11 +60,13 @@ export default function ProductCard({ product, className }: ProductCardProps) {
               -{discountPercent}%
             </span>
           )}
-          {product.condition === "new" && (
-            <span className="badge bg-green-500 text-white text-xs font-semibold">
-              New
-            </span>
-          )}
+          {product.created_at &&
+            Date.now() - new Date(product.created_at).getTime() <
+              24 * 60 * 60 * 1000 && (
+              <span className="badge bg-green-500 text-white text-xs font-semibold">
+                New
+              </span>
+            )}
         </div>
 
         {/* Actions overlay */}

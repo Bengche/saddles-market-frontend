@@ -11,7 +11,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { ChevronRight, Lock, Tag, Truck, Zap, CheckCircle } from "lucide-react";
+import { ChevronRight, Lock, Tag, Truck, Zap } from "lucide-react";
 
 const addressSchema = z.object({
   firstName: z.string().min(1, "Required"),
@@ -61,9 +61,6 @@ export default function CheckoutPage() {
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [couponLoading, setCouponLoading] = useState(false);
   const [placingOrder, setPlacingOrder] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [orderId, setOrderId] = useState<string | null>(null);
-  const [orderNumber, setOrderNumber] = useState<string | null>(null);
 
   const subtotal =
     cart?.items.reduce(
@@ -156,9 +153,9 @@ export default function CheckoutPage() {
       };
       const res = await api.post("/orders", payload);
       await clearCart();
-      setOrderId(res.data.data.orderId);
-      setOrderNumber(res.data.data.orderNumber);
-      setSuccess(true);
+      router.push(
+        `/order-success?orderNumber=${encodeURIComponent(res.data.data.orderNumber)}&orderId=${encodeURIComponent(res.data.data.orderId)}`,
+      );
     } catch (err) {
       showToast(getErrorMessage(err), "error");
     } finally {
@@ -180,36 +177,6 @@ export default function CheckoutPage() {
           <Link href="/products" className="btn-primary">
             Shop Saddles
           </Link>
-        </div>
-      </div>
-    );
-  }
-
-  if (success) {
-    return (
-      <div className="min-h-screen bg-cream-100 flex items-center justify-center px-4">
-        <div className="bg-white rounded-3xl shadow-card p-10 max-w-md w-full text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircle size={32} className="text-green-500" />
-          </div>
-          <h1 className="font-serif text-3xl font-bold text-primary-500 mb-3">
-            Order Placed!
-          </h1>
-          <p className="text-gray-600 mb-2">
-            Thank you for your order. We&apos;ve sent a confirmation to your
-            email.
-          </p>
-          {orderNumber && (
-            <p className="text-sm text-gray-400 mb-6">Order #{orderNumber}</p>
-          )}
-          <div className="flex flex-col gap-3">
-            <Link href="/account/orders" className="btn-primary">
-              View My Orders
-            </Link>
-            <Link href="/products" className="btn-secondary">
-              Continue Shopping
-            </Link>
-          </div>
         </div>
       </div>
     );
