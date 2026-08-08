@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Upload, Loader2 } from "lucide-react";
+import { Upload } from "lucide-react";
+import Spinner from "@/components/ui/Spinner";
 import api, { getErrorMessage } from "@/lib/api";
 import { useToast } from "@/context/ToastContext";
 
@@ -213,10 +214,7 @@ export default function AdminNewBlogPage() {
                   onChange={(e) => handleCoverUpload(e.target.files)}
                 />
                 {uploadingCover ? (
-                  <Loader2
-                    size={24}
-                    className="animate-spin text-primary-500"
-                  />
+                  <Spinner size="sm" className="text-primary-500" />
                 ) : (
                   <Upload size={24} className="text-gray-400" />
                 )}

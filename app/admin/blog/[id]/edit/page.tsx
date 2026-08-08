@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
-import { Upload, Loader2 } from "lucide-react";
+import { Upload } from "lucide-react";
+import Spinner from "@/components/ui/Spinner";
 import api, { getErrorMessage } from "@/lib/api";
 import { useToast } from "@/context/ToastContext";
 
@@ -106,7 +107,7 @@ export default function AdminEditBlogPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 size={32} className="animate-spin text-primary-500" />
+        <Spinner size="md" className="text-primary-500" />
       </div>
     );
   }
@@ -232,10 +233,7 @@ export default function AdminEditBlogPage() {
                   onChange={(e) => handleCoverUpload(e.target.files)}
                 />
                 {uploadingCover ? (
-                  <Loader2
-                    size={24}
-                    className="animate-spin text-primary-500"
-                  />
+                  <Spinner size="sm" className="text-primary-500" />
                 ) : (
                   <Upload size={24} className="text-gray-400" />
                 )}

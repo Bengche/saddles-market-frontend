@@ -6,7 +6,8 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { Heart, ShoppingCart, Loader2 } from "lucide-react";
+import { Heart, ShoppingCart } from "lucide-react";
+import Spinner from "@/components/ui/Spinner";
 import api, { getErrorMessage } from "@/lib/api";
 import { useToast } from "@/context/ToastContext";
 import { useCart } from "@/context/CartContext";
@@ -75,7 +76,7 @@ export default function FavoritesPage() {
 
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <Loader2 size={32} className="animate-spin text-primary-300" />
+            <Spinner size="md" className="text-primary-300" />
           </div>
         ) : products.length === 0 ? (
           <div className="bg-white rounded-3xl shadow-card p-16 text-center">

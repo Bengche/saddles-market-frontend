@@ -210,7 +210,7 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
                 src={images[activeImage]?.url || "/placeholder-saddle.jpg"}
                 alt={images[activeImage]?.alt || product.name}
                 fill
-                className="object-cover"
+                className="object-contain"
                 priority
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />

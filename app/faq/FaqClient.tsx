@@ -21,7 +21,7 @@ export const FAQ_DATA: FaqCategory[] = [
     items: [
       {
         question: "How long does shipping take?",
-        answer: `Standard shipping takes 5–8 business days. Express shipping takes 1–3 business days. Orders over $${SITE_CONFIG.shipping.freeShippingThreshold} qualify for free standard shipping automatically.`,
+        answer: `Standard shipping takes 3–5 business days. Express shipping takes 1–3 business days. Orders over $${SITE_CONFIG.shipping.freeShippingThreshold} qualify for free standard shipping automatically.`,
       },
       {
         question: "Do you ship internationally?",

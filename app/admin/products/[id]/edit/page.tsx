@@ -3,7 +3,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
-import { X, Plus, Upload, Star, Loader2 } from "lucide-react";
+import { X, Plus, Upload, Star } from "lucide-react";
+import Spinner from "@/components/ui/Spinner";
 import Image from "next/image";
 import api, { getErrorMessage } from "@/lib/api";
 import { useToast } from "@/context/ToastContext";
@@ -324,7 +325,7 @@ export default function AdminEditProductPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 size={32} className="animate-spin text-primary-500" />
+        <Spinner size="md" className="text-primary-500" />
       </div>
     );
   }
@@ -538,7 +539,7 @@ export default function AdminEditProductPage() {
               onChange={(e) => handleImageFiles(e.target.files)}
             />
             {uploading ? (
-              <Loader2 size={28} className="animate-spin text-primary-500" />
+              <Spinner size="sm" className="text-primary-500" />
             ) : (
               <Upload size={28} className="text-gray-400" />
             )}

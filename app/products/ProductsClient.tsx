@@ -101,6 +101,13 @@ export default function ProductsClient() {
     router.push(`/products?${params.toString()}`);
   };
 
+  // Dedicated page navigation — preserves all filters, no scroll-to-top
+  const goToPage = (page: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", String(page));
+    router.push(`/products?${params.toString()}`, { scroll: false });
+  };
+
   const clearFilters = () => router.push("/products");
 
   const hasActiveFilters =
@@ -372,7 +379,7 @@ export default function ProductsClient() {
               return (
                 <button
                   key={page}
-                  onClick={() => setParam("page", String(page))}
+                  onClick={() => goToPage(page)}
                   className={`w-10 h-10 rounded-lg text-sm font-medium transition-all ${
                     filters.page === page
                       ? "bg-primary-500 text-white shadow-sm"

@@ -2,6 +2,7 @@
 
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import Spinner from "@/components/ui/Spinner";
 import Link from "next/link";
 import { CheckCircle, Package, Mail, Phone } from "lucide-react";
 import { SITE_CONFIG } from "@/lib/siteConfig";
@@ -129,7 +130,7 @@ export default function OrderSuccessPage() {
     <Suspense
       fallback={
         <div className="min-h-screen bg-cream-100 flex items-center justify-center">
-          <div className="w-8 h-8 border-2 border-primary-500 border-t-transparent rounded-full animate-spin" />
+          <Spinner size="md" className="text-primary-500" />
         </div>
       }
     >

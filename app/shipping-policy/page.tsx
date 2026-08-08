@@ -29,7 +29,7 @@ export default function ShippingPolicyPage() {
               Orders over{" "}
               {formatPrice(SITE_CONFIG.shipping.freeShippingThreshold)}
             </p>
-            <p className="text-xs text-gray-400">5–8 business days</p>
+            <p className="text-xs text-gray-400">3–5 business days</p>
           </div>
           <div className="bg-white rounded-2xl shadow-card p-5 text-center">
             <p className="font-serif text-2xl font-bold text-primary-500 mb-1">
@@ -38,7 +38,7 @@ export default function ShippingPolicyPage() {
             <p className="text-sm font-medium text-gray-900">
               Standard Shipping
             </p>
-            <p className="text-xs text-gray-400 mt-1">5–8 business days</p>
+            <p className="text-xs text-gray-400 mt-1">3–5 business days</p>
           </div>
           <div className="bg-white rounded-2xl shadow-card p-5 text-center">
             <p className="font-serif text-2xl font-bold text-gold-500 mb-1">
@@ -68,7 +68,7 @@ export default function ShippingPolicyPage() {
             Standard Shipping — {formatPrice(SITE_CONFIG.shipping.standardRate)}
           </h2>
           <p>
-            Delivered in <strong>5–8 business days</strong> after order
+            Delivered in <strong>3–5 business days</strong> after order
             processing. Business days are Monday–Friday, excluding US federal
             holidays. Standard shipping applies to orders under{" "}
             {formatPrice(SITE_CONFIG.shipping.freeShippingThreshold)}.

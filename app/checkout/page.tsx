@@ -31,7 +31,13 @@ const checkoutSchema = z
     billingSameAsShipping: z.boolean(),
     billing: addressSchema.optional(),
     shippingMethod: z.enum(["standard", "express", "free"]),
-    paymentMethod: z.enum(["paypal", "bank_transfer", "other"]),
+    paymentMethod: z.enum([
+      "paypal",
+      "bank_transfer",
+      "zelle",
+      "crypto",
+      "other",
+    ]),
     paymentOtherDetails: z.string().optional(),
     couponCode: z.string().optional(),
     notes: z.string().optional(),
@@ -52,7 +58,7 @@ const SHIPPING_OPTIONS = [
   {
     id: "standard",
     label: "Standard Shipping",
-    desc: "5–8 business days",
+    desc: "3–5 business days",
     price: SITE_CONFIG.shipping.standardRate,
   },
   {
@@ -161,12 +167,26 @@ export default function CheckoutPage() {
         shippingMethod: data.shippingMethod,
         paymentMethod: data.paymentMethod,
         couponCode: couponCode || undefined,
-        customerNotes:
-          data.paymentMethod === "other" && data.paymentOtherDetails?.trim()
-            ? `Payment method: ${data.paymentOtherDetails.trim()}${
-                data.notes ? `\n${data.notes}` : ""
-              }`
-            : data.notes || undefined,
+        customerNotes: (() => {
+          const methodLabel: Record<string, string> = {
+            zelle: "Zelle",
+            crypto: "Cryptocurrency",
+          };
+          if (
+            data.paymentMethod === "other" &&
+            data.paymentOtherDetails?.trim()
+          ) {
+            return `Payment method: ${data.paymentOtherDetails.trim()}${
+              data.notes ? `\n${data.notes}` : ""
+            }`;
+          }
+          if (methodLabel[data.paymentMethod]) {
+            return `Payment method: ${methodLabel[data.paymentMethod]}${
+              data.notes ? `\n${data.notes}` : ""
+            }`;
+          }
+          return data.notes || undefined;
+        })(),
       };
       const res = await api.post("/orders", payload);
       await clearCart();
@@ -448,7 +468,7 @@ export default function CheckoutPage() {
                           Free Shipping
                         </p>
                         <p className="text-sm text-gray-500">
-                          5–8 business days
+                          3–5 business days
                         </p>
                       </div>
                       <span className="font-semibold text-green-600">FREE</span>
@@ -501,9 +521,19 @@ export default function CheckoutPage() {
                       desc: "Pay with your PayPal account",
                     },
                     {
+                      id: "zelle",
+                      label: "Zelle",
+                      desc: "Send payment via Zelle — details emailed after order",
+                    },
+                    {
+                      id: "crypto",
+                      label: "Cryptocurrency",
+                      desc: "Pay with Bitcoin, Ethereum, or other crypto — details emailed after order",
+                    },
+                    {
                       id: "other",
                       label: "Other",
-                      desc: "Zelle, Venmo, crypto, or any other method",
+                      desc: "Venmo, Western Union, or any other method",
                     },
                   ].map((pm) => (
                     <label

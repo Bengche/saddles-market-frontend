@@ -53,12 +53,12 @@ export const SITE_CONFIG = {
   },
 
   shipping: {
-    freeShippingThreshold: 1000,
+    freeShippingThreshold: 2000,
     standardShippingCost: 49,
     expressShippingCost: 99,
     standardRate: 49,
     expressRate: 99,
-    standardDays: "5-7",
+    standardDays: "3-5",
     expressDays: "2-3",
     internationalDays: "10-21",
   },
@@ -72,7 +72,7 @@ export const SITE_CONFIG = {
     defaultTitle: "Saddles Market — Premium Horse Saddles",
     titleTemplate: "%s | Saddles Market",
     defaultDescription:
-      "Shop premium horse saddles at Saddles Market. Western, English, dressage, jumping & trail saddles. Expert quality, 30-day free trial, free shipping on orders over $1000.",
+      "Shop premium horse saddles at Saddles Market. Western, English, dressage, jumping & trail saddles. Expert quality, 30-day free trial, free shipping on orders over $2000.",
     keywords: [
       "horse saddles",
       "buy horse saddles",

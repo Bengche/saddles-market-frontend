@@ -4,6 +4,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Spinner from "@/components/ui/Spinner";
 import {
   LayoutDashboard,
   Package,
@@ -60,7 +61,7 @@ export default function AdminLayout({
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-        <div className="h-10 w-10 rounded-full border-2 border-gray-200 border-t-primary-500 animate-spin" />
+        <Spinner size="md" className="text-primary-500" />
       </div>
     );
   }
