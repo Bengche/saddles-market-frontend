@@ -185,7 +185,7 @@ export default function AiChat() {
         .map((m) => ({ role: m.role, content: m.text }));
 
       try {
-        const res = await api.post("/api/chat", {
+        const res = await api.post("/chat", {
           message: text.trim(),
           history,
         });
