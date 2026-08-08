@@ -48,7 +48,10 @@ function TypingIndicator() {
             <span
               key={i}
               className="w-1.5 h-1.5 bg-gray-300 rounded-full animate-bounce"
-              style={{ animationDelay: `${i * 0.18}s`, animationDuration: "0.9s" }}
+              style={{
+                animationDelay: `${i * 0.18}s`,
+                animationDuration: "0.9s",
+              }}
             />
           ))}
         </div>
@@ -66,7 +69,10 @@ function ProductCard({
 }) {
   const discount =
     product.compare_price && product.compare_price > product.price
-      ? Math.round(((product.compare_price - product.price) / product.compare_price) * 100)
+      ? Math.round(
+          ((product.compare_price - product.price) / product.compare_price) *
+            100,
+        )
       : 0;
 
   return (
@@ -100,11 +106,19 @@ function ProductCard({
         </p>
         <div className="flex items-baseline gap-1.5 mt-0.5">
           <span className="text-sm font-bold text-primary-600">
-            ${product.price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            $
+            {product.price.toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
           </span>
           {product.compare_price && (
             <span className="text-[10px] text-gray-400 line-through">
-              ${product.compare_price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              $
+              {product.compare_price.toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
             </span>
           )}
         </div>
@@ -171,12 +185,16 @@ export default function AiChat() {
         .map((m) => ({ role: m.role, content: m.text }));
 
       try {
-        const res = await api.post("/chat", { message: text.trim(), history });
+        const res = await api.post("/api/chat", {
+          message: text.trim(),
+          history,
+        });
         const aiMsg: Message = {
           id: crypto.randomUUID(),
           role: "assistant",
           text: res.data.reply,
-          products: res.data.products?.length > 0 ? res.data.products : undefined,
+          products:
+            res.data.products?.length > 0 ? res.data.products : undefined,
         };
         setMessages((prev) => [...prev, aiMsg]);
       } catch {
@@ -227,7 +245,9 @@ export default function AiChat() {
                   <Sparkles size={15} className="text-[#C4A862]" />
                 </div>
                 <div>
-                  <p className="text-white font-semibold text-sm leading-none">Sterling</p>
+                  <p className="text-white font-semibold text-sm leading-none">
+                    Sterling
+                  </p>
                   <p className="text-white/40 text-[11px] mt-0.5 tracking-wide">
                     Equestrian AI Advisor
                   </p>
@@ -285,7 +305,11 @@ export default function AiChat() {
                       {msg.products && msg.products.length > 0 && (
                         <div className="w-full space-y-2">
                           {msg.products.map((p) => (
-                            <ProductCard key={p.id} product={p} onClose={() => setIsOpen(false)} />
+                            <ProductCard
+                              key={p.id}
+                              product={p}
+                              onClose={() => setIsOpen(false)}
+                            />
                           ))}
                         </div>
                       )}
