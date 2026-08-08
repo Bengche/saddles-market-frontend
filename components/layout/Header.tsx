@@ -501,6 +501,26 @@ export default function Header() {
                         </Link>
                       </div>
                     </div>
+                    <Link
+                      href="/account/orders"
+                      className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-primary-50 hover:text-primary-600 font-medium"
+                    >
+                      <Package size={18} /> My Orders
+                    </Link>
+                    <Link
+                      href="/account/favorites"
+                      className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-primary-50 hover:text-primary-600 font-medium"
+                    >
+                      <Heart size={18} /> My Favorites
+                    </Link>
+                    {isAdmin && (
+                      <Link
+                        href="/admin"
+                        className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gold-600 hover:bg-gold-50 font-medium"
+                      >
+                        <Settings size={18} /> Admin Panel
+                      </Link>
+                    )}
                     <button
                       onClick={logout}
                       className="w-full btn-secondary text-red-600 border-red-200 hover:bg-red-50"
