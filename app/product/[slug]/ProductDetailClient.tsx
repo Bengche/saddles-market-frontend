@@ -547,7 +547,7 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
                 },
                 {
                   icon: Truck,
-                  text: "Free Shipping $500+",
+                  text: "Free Shipping $2,000+",
                   sub: "Fast, insured delivery",
                 },
                 {
