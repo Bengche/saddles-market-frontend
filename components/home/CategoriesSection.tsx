@@ -8,44 +8,65 @@ import { motion } from "framer-motion";
 const categories = [
   {
     name: "Western",
-    slug: "western",
+    href: "/products?category=western-saddles",
     image:
       "https://saddleonlineshop.com/cdn/shop/products/9075PonySS_2.jpg?v=1640371922",
     desc: "Classic comfort for trail and ranch",
   },
   {
     name: "English",
-    slug: "english",
+    href: "/products?category=english-saddles",
     image: "https://i.ebayimg.com/images/g/C7AAAOSwgjxlAEVo/s-l400.jpg",
     desc: "Elegant tradition and performance",
   },
   {
     name: "Dressage",
-    slug: "dressage",
+    href: "/products?category=dressage-saddles",
     image:
       "https://batessaddles.eu/cdn/shop/files/900f5e982bd95b47f29f9206e397d759.png?v=1729221812",
     desc: "Precision for the art of dressage",
   },
   {
     name: "Jumping",
-    slug: "jumping",
+    href: "/products?category=jumping-saddles",
     image:
       "https://oursaddlery.com/wp-content/uploads/2021/05/Jumping_Saddle_Prestige_Paris_Classic_Black_1.jpg",
     desc: "Freedom and security over fences",
   },
   {
     name: "Trail",
-    slug: "trail",
+    href: "/products?category=trail-saddles",
     image:
       "https://farmandranchdepot.com/images/product/KS-Braden-Trail-Saddle-KS2634.jpeg",
     desc: "Built for long-distance adventures",
   },
   {
     name: "Youth",
-    slug: "youth",
+    href: "/products?category=youth-saddles",
     image:
       "https://www.chicksaddlery.com/Merchant2/graphics/00000001/WT5394_271x380_2.jpg",
     desc: "Safe and comfortable for young riders",
+  },
+  {
+    name: "Barrel Racing",
+    href: "/products?category=barrel-racing-saddles",
+    image:
+      "https://www.teskeysaddles.com/images/thumbnails/thumb_4382.jpg",
+    desc: "Built for speed and explosive turns",
+  },
+  {
+    name: "All Purpose",
+    href: "/products?discipline=all_purpose",
+    image:
+      "https://batessaddles.eu/cdn/shop/files/bates-all-purpose-isabell-saddle.jpg",
+    desc: "Versatile saddles for every rider",
+  },
+  {
+    name: "Saddle Accessories",
+    href: "/products?category=saddle-accessories",
+    image:
+      "https://www.chicksaddlery.com/Merchant2/graphics/00000001/CSPA5905-1A.JPG",
+    desc: "Pads, girths, stirrups and more",
   },
 ];
 
@@ -83,9 +104,9 @@ export default function CategoriesSection() {
           className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6"
         >
           {categories.map((cat) => (
-            <motion.div key={cat.slug} variants={item}>
+            <motion.div key={cat.href} variants={item}>
               <Link
-                href={`/products?discipline=${cat.slug}`}
+                href={cat.href}
                 className="group relative overflow-hidden rounded-2xl aspect-[3/2] flex items-end block"
               >
                 <Image

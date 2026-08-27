@@ -88,6 +88,7 @@ export default function ProductsClient() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   const filters: ProductFilters = {
+    category: searchParams.get("category") || "",
     search: searchParams.get("search") || "",
     discipline: searchParams.get("discipline") || "",
     condition: searchParams.get("condition") || "",
@@ -137,13 +138,14 @@ export default function ProductsClient() {
 
   const clearFilters = () => router.push("/products");
 
-  const disciplineTitle = filters.discipline
-    ? filters.discipline
-        .replace(/_/g, " ")
-        .replace(/\b\w/g, (l) => l.toUpperCase()) + " Saddles"
+  const disciplineTitle = filters.category
+    ? filters.category.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())
+    : filters.discipline
+    ? filters.discipline.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()) + " Saddles"
     : "Horse Saddles";
 
   const hasActiveFilters =
+    filters.category ||
     filters.discipline ||
     filters.condition ||
     filters.search ||
