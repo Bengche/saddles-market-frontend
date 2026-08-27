@@ -110,10 +110,18 @@ export default function WhyChooseUsSection() {
         <div className="bg-primary-500 rounded-3xl p-10 md:p-14">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
             {[
-              { value: "1,200+", label: "Happy Riders",      sub: "and counting" },
-              { value: "500+",   label: "Saddles in Stock",  sub: "all disciplines" },
-              { value: "30-Day", label: "Free Trial",         sub: "no risk" },
-              { value: "98%",    label: "Satisfaction Rate",  sub: "from verified buyers" },
+              { value: "1,200+", label: "Happy Riders", sub: "and counting" },
+              {
+                value: "500+",
+                label: "Saddles in Stock",
+                sub: "all disciplines",
+              },
+              { value: "30-Day", label: "Free Trial", sub: "no risk" },
+              {
+                value: "98%",
+                label: "Satisfaction Rate",
+                sub: "from verified buyers",
+              },
             ].map((stat, i) => (
               <motion.div
                 key={stat.label}
@@ -126,7 +134,9 @@ export default function WhyChooseUsSection() {
                 <p className="font-serif text-4xl md:text-5xl font-bold text-white mb-1">
                   {stat.value}
                 </p>
-                <p className="text-white font-semibold text-sm mb-1">{stat.label}</p>
+                <p className="text-white font-semibold text-sm mb-1">
+                  {stat.label}
+                </p>
                 <p className="text-white/50 text-xs">{stat.sub}</p>
               </motion.div>
             ))}
