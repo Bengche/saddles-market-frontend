@@ -139,10 +139,14 @@ export default function ProductsClient() {
   const clearFilters = () => router.push("/products");
 
   const disciplineTitle = filters.category
-    ? filters.category.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())
+    ? filters.category
+        .replace(/-/g, " ")
+        .replace(/\b\w/g, (l) => l.toUpperCase())
     : filters.discipline
-    ? filters.discipline.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()) + " Saddles"
-    : "Horse Saddles";
+      ? filters.discipline
+          .replace(/_/g, " ")
+          .replace(/\b\w/g, (l) => l.toUpperCase()) + " Saddles"
+      : "Horse Saddles";
 
   const hasActiveFilters =
     filters.category ||

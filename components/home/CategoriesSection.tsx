@@ -35,7 +35,7 @@ const categories = [
   },
   {
     name: "Trail",
-    href: "/products?discipline=trail",
+    href: "/products?category=trail-saddles",
     image:
       "https://farmandranchdepot.com/images/product/KS-Braden-Trail-Saddle-KS2634.jpeg",
     desc: "Built for long-distance adventures",
