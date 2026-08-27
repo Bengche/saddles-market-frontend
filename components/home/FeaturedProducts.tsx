@@ -10,13 +10,14 @@ import api from "@/lib/api";
 
 function SkeletonCard() {
   return (
-    <div className="bg-white rounded-2xl overflow-hidden shadow-card">
-      <div className="aspect-[4/3] skeleton" />
-      <div className="p-4 space-y-3">
-        <div className="h-3 skeleton rounded w-1/3" />
-        <div className="h-4 skeleton rounded w-3/4" />
-        <div className="h-4 skeleton rounded w-1/2" />
-        <div className="h-6 skeleton rounded w-1/3" />
+    <div className="bg-white rounded-3xl overflow-hidden shadow-card animate-pulse">
+      <div className="aspect-[3/2] bg-gray-200" />
+      <div className="p-5 space-y-3">
+        <div className="h-3 bg-gray-200 rounded-full w-1/3" />
+        <div className="h-5 bg-gray-200 rounded w-3/4" />
+        <div className="h-4 bg-gray-200 rounded w-1/2" />
+        <div className="h-px bg-gray-100 w-full mt-1" />
+        <div className="h-6 bg-gray-200 rounded w-1/3" />
       </div>
     </div>
   );
@@ -28,7 +29,7 @@ export default function FeaturedProducts() {
 
   useEffect(() => {
     api
-      .get("/products?featured=true&limit=6")
+      .get("/products?featured=true&limit=12")
       .then((res) => setProducts(res.data.data?.products || []))
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -60,9 +61,9 @@ export default function FeaturedProducts() {
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8">
           {loading
-            ? Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
+            ? Array.from({ length: 12 }).map((_, i) => <SkeletonCard key={i} />)
             : products.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}

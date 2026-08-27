@@ -12,6 +12,7 @@ import { z } from "zod";
 interface Coupon {
   id: string;
   code: string;
+  description?: string;
   discount_type: "percentage" | "fixed";
   discount_value: number;
   minimum_order?: number;
@@ -28,8 +29,10 @@ const couponSchema = z.object({
     .min(3, "Code must be at least 3 chars")
     .max(20)
     .toUpperCase(),
+  description: z.string().max(120).optional(),
   discount_type: z.enum(["percentage", "fixed"]),
   discount_value: z.coerce.number().min(0.01, "Required"),
+  maximum_discount: z.coerce.number().optional(),
   min_order_amount: z.coerce.number().optional(),
   usage_limit: z.coerce.number().optional(),
   expires_at: z.string().optional(),
@@ -150,10 +153,13 @@ export default function AdminCouponsPage() {
                     >
                       <td className="px-5 py-3 font-mono font-semibold text-gray-900">
                         {coupon.code}
+                        {coupon.description && (
+                          <p className="text-xs font-sans font-normal text-gray-400 mt-0.5">{coupon.description}</p>
+                        )}
                       </td>
                       <td className="px-5 py-3 font-medium text-green-600">
                         {coupon.discount_type === "percentage"
-                          ? `${coupon.discount_value}%`
+                          ? `${coupon.discount_value}%${coupon.maximum_discount ? ` (max ${formatPrice(coupon.maximum_discount)})` : ""}`
                           : formatPrice(coupon.discount_value)}
                       </td>
                       <td className="px-5 py-3 text-gray-500">
@@ -220,6 +226,16 @@ export default function AdminCouponsPage() {
                   </p>
                 )}
               </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Description
+                </label>
+                <input
+                  {...register("description")}
+                  className="input-field"
+                  placeholder="Internal note (e.g. Summer sale 2026)"
+                />
+              </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -250,6 +266,21 @@ export default function AdminCouponsPage() {
                   )}
                 </div>
               </div>
+              {discountType === "percentage" && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Max Discount Cap ($)
+                  </label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    {...register("maximum_discount")}
+                    className="input-field"
+                    placeholder="No cap"
+                  />
+                  <p className="text-xs text-gray-400 mt-1">Limit the maximum dollar savings for percentage coupons</p>
+                </div>
+              )}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">

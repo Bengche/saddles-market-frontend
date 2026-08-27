@@ -28,6 +28,7 @@ const DISCIPLINES = [
 ];
 const CONDITIONS = ["new", "excellent", "good", "fair"];
 const SORT_OPTIONS = [
+  { value: "random", label: "Featured" },
   { value: "newest", label: "Newest First" },
   { value: "price_asc", label: "Price: Low to High" },
   { value: "price_desc", label: "Price: High to Low" },
@@ -37,15 +38,36 @@ const SORT_OPTIONS = [
 
 function ProductSkeleton() {
   return (
-    <div className="bg-white rounded-2xl overflow-hidden shadow-card animate-pulse">
-      <div className="aspect-[4/3] bg-gray-200" />
-      <div className="p-4 space-y-3">
-        <div className="h-3 bg-gray-200 rounded w-1/4" />
-        <div className="h-4 bg-gray-200 rounded w-3/4" />
+    <div className="bg-white rounded-3xl overflow-hidden shadow-card animate-pulse">
+      <div className="aspect-[3/2] bg-gray-200" />
+      <div className="p-5 space-y-3">
+        <div className="h-3 bg-gray-200 rounded-full w-1/3" />
+        <div className="h-5 bg-gray-200 rounded w-3/4" />
+        <div className="h-4 bg-gray-200 rounded w-1/2" />
+        <div className="h-px bg-gray-100 w-full mt-1" />
         <div className="h-6 bg-gray-200 rounded w-1/3" />
       </div>
     </div>
   );
+}
+
+function getPaginationRange(current: number, total: number): (number | "...")[] {
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+  const range: number[] = [];
+  for (let i = Math.max(1, current - 2); i <= Math.min(total, current + 2); i++) {
+    range.push(i);
+  }
+  const pages: (number | "...")[] = [];
+  if (range[0] > 1) {
+    pages.push(1);
+    if (range[0] > 2) pages.push("...");
+  }
+  pages.push(...range);
+  if (range[range.length - 1] < total) {
+    if (range[range.length - 1] < total - 1) pages.push("...");
+    pages.push(total);
+  }
+  return pages;
 }
 
 export default function ProductsClient() {
@@ -64,7 +86,7 @@ export default function ProductsClient() {
     condition: searchParams.get("condition") || "",
     minPrice: Number(searchParams.get("minPrice") || 0),
     maxPrice: Number(searchParams.get("maxPrice") || 0),
-    sort: (searchParams.get("sort") as ProductFilters["sort"]) || "newest",
+    sort: (searchParams.get("sort") as ProductFilters["sort"]) || "random",
     page: Number(searchParams.get("page") || 1),
     limit: 12,
   };
@@ -110,6 +132,10 @@ export default function ProductsClient() {
 
   const clearFilters = () => router.push("/products");
 
+  const disciplineTitle = filters.discipline
+    ? filters.discipline.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()) + " Saddles"
+    : "Horse Saddles";
+
   const hasActiveFilters =
     filters.discipline ||
     filters.condition ||
@@ -123,7 +149,7 @@ export default function ProductsClient() {
       <div className="bg-primary-500 py-14 md:py-20">
         <div className="container-custom">
           <h1 className="font-serif text-4xl md:text-5xl font-bold text-white mb-4">
-            Horse Saddles
+            {disciplineTitle}
           </h1>
           <p className="text-white/70 text-lg max-w-lg">
             {total > 0
@@ -340,7 +366,7 @@ export default function ProductsClient() {
 
         {/* Results */}
         {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8">
             {Array.from({ length: 12 }).map((_, i) => (
               <ProductSkeleton key={i} />
             ))}
@@ -361,7 +387,7 @@ export default function ProductsClient() {
           <div
             className={
               viewMode === "grid"
-                ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                ? "grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8"
                 : "flex flex-col gap-4"
             }
           >
@@ -373,24 +399,47 @@ export default function ProductsClient() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-2 mt-12">
-            {Array.from({ length: Math.min(totalPages, 7) }).map((_, i) => {
-              const page = i + 1;
-              return (
+          <nav
+            className="flex items-center justify-center flex-wrap gap-1.5 mt-12"
+            aria-label="Pagination"
+          >
+            <button
+              onClick={() => goToPage(filters.page! - 1)}
+              disabled={filters.page === 1}
+              className="px-3 h-10 rounded-lg text-sm font-medium bg-white border border-gray-200 text-gray-700 hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm transition-all"
+            >
+              ← Prev
+            </button>
+            {getPaginationRange(filters.page!, totalPages).map((p, i) =>
+              p === "..." ? (
+                <span
+                  key={`ellipsis-${i}`}
+                  className="w-10 h-10 flex items-center justify-center text-gray-400 text-sm select-none"
+                >
+                  …
+                </span>
+              ) : (
                 <button
-                  key={page}
-                  onClick={() => goToPage(page)}
+                  key={p}
+                  onClick={() => goToPage(p as number)}
                   className={`w-10 h-10 rounded-lg text-sm font-medium transition-all ${
-                    filters.page === page
+                    filters.page === p
                       ? "bg-primary-500 text-white shadow-sm"
                       : "bg-white text-gray-700 hover:bg-primary-50 hover:text-primary-600 shadow-sm border border-gray-200"
                   }`}
                 >
-                  {page}
+                  {p}
                 </button>
-              );
-            })}
-          </div>
+              )
+            )}
+            <button
+              onClick={() => goToPage(filters.page! + 1)}
+              disabled={filters.page === totalPages}
+              className="px-3 h-10 rounded-lg text-sm font-medium bg-white border border-gray-200 text-gray-700 hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm transition-all"
+            >
+              Next →
+            </button>
+          </nav>
         )}
       </div>
     </div>

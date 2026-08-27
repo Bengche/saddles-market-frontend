@@ -239,16 +239,13 @@ export default function OrderDetailPage() {
               </div>
               <div className="flex justify-between text-gray-600">
                 <span>
-                  Shipping
-                  {order.shipping_method && (
-                    <span className="ml-1 text-xs text-gray-400 capitalize">
-                      ({order.shipping_method.replace("_", " ")})
-                    </span>
-                  )}
+                  {order.shipping_method === "express"
+                    ? "Express Shipping (2\u20133 days)"
+                    : "Standard Shipping (5\u20137 days)"}
                 </span>
                 <span>
                   {parseFloat(String(order.shipping_cost)) === 0 ? (
-                    <span className="text-green-600">FREE</span>
+                    <span className="text-green-600 font-semibold">FREE</span>
                   ) : (
                     formatPrice(order.shipping_cost)
                   )}

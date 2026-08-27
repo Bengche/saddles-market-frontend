@@ -75,6 +75,7 @@ export default function CheckoutPage() {
   const { showToast } = useToast();
   const router = useRouter();
   const [couponCode, setCouponCode] = useState("");
+  const [appliedCouponCode, setAppliedCouponCode] = useState("");
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [couponLoading, setCouponLoading] = useState(false);
   const [placingOrder, setPlacingOrder] = useState(false);
@@ -121,7 +122,7 @@ export default function CheckoutPage() {
       : shippingMethod === "express"
         ? SITE_CONFIG.shipping.expressRate
         : SITE_CONFIG.shipping.standardRate;
-  const total = subtotal + shippingCost - couponDiscount;
+  const total = Math.max(0, subtotal + shippingCost - couponDiscount);
 
   const applyCoupon = async () => {
     if (!couponCode.trim()) return;
@@ -131,6 +132,7 @@ export default function CheckoutPage() {
         code: couponCode,
         subtotal,
       });
+      setAppliedCouponCode(couponCode);
       setCouponDiscount(res.data.discount);
       showToast(
         `Coupon applied! You saved ${formatPrice(res.data.discount)}`,
@@ -166,7 +168,7 @@ export default function CheckoutPage() {
         billedSameAsShip: data.billingSameAsShipping,
         shippingMethod: data.shippingMethod,
         paymentMethod: data.paymentMethod,
-        couponCode: couponCode || undefined,
+        couponCode: appliedCouponCode || undefined,
         customerNotes: (() => {
           const methodLabel: Record<string, string> = {
             zelle: "Zelle",
@@ -657,31 +659,56 @@ export default function CheckoutPage() {
 
                 <div className="border-t border-gray-100 pt-4 mb-5">
                   {/* Coupon */}
-                  <div className="flex gap-2 mb-4">
-                    <div className="flex-1 relative">
-                      <Tag
-                        size={15}
-                        className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                      />
-                      <input
-                        type="text"
-                        value={couponCode}
-                        onChange={(e) =>
-                          setCouponCode(e.target.value.toUpperCase())
-                        }
-                        placeholder="Coupon code"
-                        className="input-field pl-9 text-sm h-9"
-                      />
+                  {appliedCouponCode ? (
+                    <div className="flex items-center justify-between px-3 py-2 bg-green-50 border border-green-200 rounded-xl text-sm mb-4">
+                      <div className="flex items-center gap-2 text-green-700">
+                        <CheckCircle size={14} />
+                        <span className="font-mono font-semibold">{appliedCouponCode}</span>
+                        <span className="text-green-600 font-normal">applied</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setAppliedCouponCode("");
+                          setCouponDiscount(0);
+                          setCouponCode("");
+                        }}
+                        className="text-xs text-gray-400 hover:text-red-500 transition-colors ml-2"
+                      >
+                        Remove
+                      </button>
                     </div>
-                    <button
-                      type="button"
-                      onClick={applyCoupon}
-                      disabled={couponLoading}
-                      className="btn-secondary px-3 py-1 text-sm h-9"
-                    >
-                      {couponLoading ? "..." : "Apply"}
-                    </button>
-                  </div>
+                  ) : (
+                    <div className="flex gap-2 mb-4">
+                      <div className="flex-1 relative">
+                        <Tag
+                          size={15}
+                          className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                        />
+                        <input
+                          type="text"
+                          value={couponCode}
+                          onChange={(e) =>
+                            setCouponCode(e.target.value.toUpperCase())
+                          }
+                          onKeyDown={(e) =>
+                            e.key === "Enter" &&
+                            (e.preventDefault(), applyCoupon())
+                          }
+                          placeholder="Coupon code"
+                          className="input-field pl-9 text-sm h-9"
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={applyCoupon}
+                        disabled={couponLoading || !couponCode.trim()}
+                        className="btn-secondary px-3 py-1 text-sm h-9"
+                      >
+                        {couponLoading ? "..." : "Apply"}
+                      </button>
+                    </div>
+                  )}
 
                   {/* Totals */}
                   <div className="space-y-2 text-sm">
@@ -701,7 +728,7 @@ export default function CheckoutPage() {
                     </div>
                     {couponDiscount > 0 && (
                       <div className="flex justify-between text-green-600">
-                        <span>Coupon discount</span>
+                        <span>Discount ({appliedCouponCode})</span>
                         <span>- {formatPrice(couponDiscount)}</span>
                       </div>
                     )}

@@ -21,6 +21,7 @@ import {
   RefreshCw,
   Lock,
   Package,
+  ArrowRight,
 } from "lucide-react";
 import { Product, Review } from "@/types";
 import { useCart } from "@/context/CartContext";
@@ -96,17 +97,21 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
       .get(`/reviews/product/${product.id}`)
       .then((r) => setReviews(r.data.data?.reviews || []))
       .catch(() => {});
+    // Recommend by discipline first; if no discipline, fall back to random pool
+    const disciplineParam = product.discipline
+      ? `discipline=${product.discipline}`
+      : "sort=random";
     api
-      .get(`/products?category=${product.category_id}&limit=4`)
+      .get(`/products?${disciplineParam}&sort=random&limit=7`)
       .then((r) =>
         setRelatedProducts(
           (r.data.data?.products || [])
             .filter((p: Product) => p.id !== product.id)
-            .slice(0, 4),
+            .slice(0, 6),
         ),
       )
       .catch(() => {});
-  }, [product.id, product.category_id]);
+  }, [product.id, product.discipline]);
 
   const hasSeatSizes = (product.available_seat_sizes?.length ?? 0) > 0;
   const hasColors = (product.available_colors?.length ?? 0) > 0;
@@ -823,13 +828,41 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
           </div>
         </div>
 
-        {/* Related products */}
+        {/* Recommended products */}
         {relatedProducts.length > 0 && (
-          <div>
-            <h2 className="font-serif text-2xl font-bold text-primary-500 mb-6">
-              You May Also Like
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
+          <div className="mt-6 sm:mt-10">
+            {/* Section divider */}
+            <div className="flex items-center gap-4 mb-10">
+              <div className="flex-1 h-px bg-gray-200" />
+              <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-gray-400 whitespace-nowrap">
+                You May Also Like
+              </span>
+              <div className="flex-1 h-px bg-gray-200" />
+            </div>
+
+            {/* Header */}
+            <div className="flex items-end justify-between gap-4 mb-8">
+              <div>
+                <h2 className="font-serif text-2xl sm:text-3xl font-bold text-primary-500">
+                  Riders Also Loved
+                </h2>
+                <p className="text-gray-400 text-sm mt-1">
+                  {product.discipline
+                    ? `More ${product.discipline.replace(/_/g, " ")} saddles curated for you`
+                    : "Similar saddles curated for you"}
+                </p>
+              </div>
+              <Link
+                href={product.discipline ? `/products?discipline=${product.discipline}` : "/products"}
+                className="flex items-center gap-1.5 text-sm text-primary-500 hover:text-primary-700 font-medium transition-colors group whitespace-nowrap"
+              >
+                View all
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-200" />
+              </Link>
+            </div>
+
+            {/* Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8">
               {relatedProducts.map((p) => (
                 <ProductCard key={p.id} product={p} />
               ))}
