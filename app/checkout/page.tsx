@@ -663,8 +663,12 @@ export default function CheckoutPage() {
                     <div className="flex items-center justify-between px-3 py-2 bg-green-50 border border-green-200 rounded-xl text-sm mb-4">
                       <div className="flex items-center gap-2 text-green-700">
                         <CheckCircle size={14} />
-                        <span className="font-mono font-semibold">{appliedCouponCode}</span>
-                        <span className="text-green-600 font-normal">applied</span>
+                        <span className="font-mono font-semibold">
+                          {appliedCouponCode}
+                        </span>
+                        <span className="text-green-600 font-normal">
+                          applied
+                        </span>
                       </div>
                       <button
                         type="button"

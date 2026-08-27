@@ -51,10 +51,17 @@ function ProductSkeleton() {
   );
 }
 
-function getPaginationRange(current: number, total: number): (number | "...")[] {
+function getPaginationRange(
+  current: number,
+  total: number,
+): (number | "...")[] {
   if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
   const range: number[] = [];
-  for (let i = Math.max(1, current - 2); i <= Math.min(total, current + 2); i++) {
+  for (
+    let i = Math.max(1, current - 2);
+    i <= Math.min(total, current + 2);
+    i++
+  ) {
     range.push(i);
   }
   const pages: (number | "...")[] = [];
@@ -133,7 +140,9 @@ export default function ProductsClient() {
   const clearFilters = () => router.push("/products");
 
   const disciplineTitle = filters.discipline
-    ? filters.discipline.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()) + " Saddles"
+    ? filters.discipline
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, (l) => l.toUpperCase()) + " Saddles"
     : "Horse Saddles";
 
   const hasActiveFilters =
@@ -430,7 +439,7 @@ export default function ProductsClient() {
                 >
                   {p}
                 </button>
-              )
+              ),
             )}
             <button
               onClick={() => goToPage(filters.page! + 1)}

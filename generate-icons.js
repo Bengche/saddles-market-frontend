@@ -13,10 +13,10 @@ const path = require("path");
 const pub = path.join(__dirname, "public");
 
 const icons = [
-  { src: "icon-app.svg",      out: "icon-192.png",          size: 192 },
-  { src: "icon-app.svg",      out: "icon-512.png",          size: 512 },
+  { src: "icon-app.svg", out: "icon-192.png", size: 192 },
+  { src: "icon-app.svg", out: "icon-512.png", size: 512 },
   { src: "icon-maskable.svg", out: "icon-maskable-512.png", size: 512 },
-  { src: "icon-app.svg",      out: "apple-touch-icon.png",  size: 180 },
+  { src: "icon-app.svg", out: "apple-touch-icon.png", size: 180 },
 ];
 
 (async () => {

@@ -79,7 +79,9 @@ export default function ProductCard({ product, className }: ProductCardProps) {
           className={cn(
             "absolute top-4 right-4 z-10 w-9 h-9 rounded-full flex items-center justify-center",
             "backdrop-blur-md shadow-sm transition-all duration-200 hover:scale-110",
-            isFav ? "bg-red-500 text-white" : "bg-white/80 text-gray-600 hover:text-red-500",
+            isFav
+              ? "bg-red-500 text-white"
+              : "bg-white/80 text-gray-600 hover:text-red-500",
           )}
           aria-label={isFav ? "Remove from favorites" : "Add to favorites"}
         >
@@ -101,7 +103,9 @@ export default function ProductCard({ product, className }: ProductCardProps) {
         {/* Discipline + seat size */}
         <div className="flex items-center justify-between mb-2">
           <span className="text-[10px] font-bold tracking-[0.12em] uppercase text-primary-400">
-            {product.discipline?.replace(/_/g, " ") || product.category?.name || "Saddle"}
+            {product.discipline?.replace(/_/g, " ") ||
+              product.category?.name ||
+              "Saddle"}
           </span>
           {product.seat_size && (
             <span className="text-[10px] font-semibold bg-cream-200 text-primary-500 px-2 py-0.5 rounded-full">
@@ -138,7 +142,9 @@ export default function ProductCard({ product, className }: ProductCardProps) {
                 />
               ))}
             </div>
-            <span className="text-[11px] text-gray-400">({product.review_count})</span>
+            <span className="text-[11px] text-gray-400">
+              ({product.review_count})
+            </span>
           </div>
         )}
 
@@ -165,7 +171,9 @@ export default function ProductCard({ product, className }: ProductCardProps) {
                 ? "bg-gray-100 text-gray-400"
                 : "bg-primary-500 hover:bg-primary-600 text-white",
             )}
-            aria-label={product.stock_quantity === 0 ? "Out of stock" : "Add to cart"}
+            aria-label={
+              product.stock_quantity === 0 ? "Out of stock" : "Add to cart"
+            }
           >
             <ShoppingCart size={16} />
           </button>

@@ -154,7 +154,9 @@ export default function AdminCouponsPage() {
                       <td className="px-5 py-3 font-mono font-semibold text-gray-900">
                         {coupon.code}
                         {coupon.description && (
-                          <p className="text-xs font-sans font-normal text-gray-400 mt-0.5">{coupon.description}</p>
+                          <p className="text-xs font-sans font-normal text-gray-400 mt-0.5">
+                            {coupon.description}
+                          </p>
                         )}
                       </td>
                       <td className="px-5 py-3 font-medium text-green-600">
@@ -278,7 +280,9 @@ export default function AdminCouponsPage() {
                     className="input-field"
                     placeholder="No cap"
                   />
-                  <p className="text-xs text-gray-400 mt-1">Limit the maximum dollar savings for percentage coupons</p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    Limit the maximum dollar savings for percentage coupons
+                  </p>
                 </div>
               )}
               <div className="grid grid-cols-2 gap-4">

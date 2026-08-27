@@ -96,7 +96,13 @@ export interface ProductFilters {
   maxPrice?: number;
   search?: string;
   featured?: boolean;
-  sort?: "price_asc" | "price_desc" | "newest" | "rating" | "name_asc" | "random";
+  sort?:
+    | "price_asc"
+    | "price_desc"
+    | "newest"
+    | "rating"
+    | "name_asc"
+    | "random";
   page?: number;
   limit?: number;
 }

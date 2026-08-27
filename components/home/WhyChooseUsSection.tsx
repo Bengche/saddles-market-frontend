@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
-import { motion, useInView, useMotionValue, useSpring } from "framer-motion";
+import React from "react";
+import { motion } from "framer-motion";
 import {
   Shield,
   RotateCcw,
@@ -62,28 +62,6 @@ const features = [
   },
 ];
 
-function CountUp({ to, suffix = "" }: { to: number; suffix?: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true });
-  const motionValue = useMotionValue(0);
-  const spring = useSpring(motionValue, { duration: 2000, bounce: 0 });
-
-  useEffect(() => {
-    if (inView) motionValue.set(to);
-  }, [inView, to, motionValue]);
-
-  useEffect(
-    () =>
-      spring.on("change", (v) => {
-        if (ref.current)
-          ref.current.textContent = Math.round(v).toLocaleString() + suffix;
-      }),
-    [spring, suffix],
-  );
-
-  return <span ref={ref}>0{suffix}</span>;
-}
-
 export default function WhyChooseUsSection() {
   return (
     <section className="py-24 bg-cream-100">
@@ -132,40 +110,25 @@ export default function WhyChooseUsSection() {
         <div className="bg-primary-500 rounded-3xl p-10 md:p-14">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
             {[
-              {
-                value: 1200,
-                suffix: "+",
-                label: "Happy Riders",
-                sub: "and counting",
-              },
-              {
-                value: 500,
-                suffix: "+",
-                label: "Saddles in Stock",
-                sub: "all disciplines",
-              },
-              {
-                value: 30,
-                suffix: "-Day",
-                label: "Free Trial",
-                sub: "no risk",
-              },
-              {
-                value: 98,
-                suffix: "%",
-                label: "Satisfaction Rate",
-                sub: "from verified buyers",
-              },
-            ].map((stat) => (
-              <div key={stat.label} className="text-center">
+              { value: "1,200+", label: "Happy Riders",      sub: "and counting" },
+              { value: "500+",   label: "Saddles in Stock",  sub: "all disciplines" },
+              { value: "30-Day", label: "Free Trial",         sub: "no risk" },
+              { value: "98%",    label: "Satisfaction Rate",  sub: "from verified buyers" },
+            ].map((stat, i) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.5, ease: "easeOut" }}
+                className="text-center"
+              >
                 <p className="font-serif text-4xl md:text-5xl font-bold text-white mb-1">
-                  <CountUp to={stat.value} suffix={stat.suffix} />
+                  {stat.value}
                 </p>
-                <p className="text-white font-semibold text-sm mb-1">
-                  {stat.label}
-                </p>
+                <p className="text-white font-semibold text-sm mb-1">{stat.label}</p>
                 <p className="text-white/50 text-xs">{stat.sub}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>

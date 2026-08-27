@@ -853,11 +853,18 @@ export default function ProductDetailClient({ initialProduct, slug }: Props) {
                 </p>
               </div>
               <Link
-                href={product.discipline ? `/products?discipline=${product.discipline}` : "/products"}
+                href={
+                  product.discipline
+                    ? `/products?discipline=${product.discipline}`
+                    : "/products"
+                }
                 className="flex items-center gap-1.5 text-sm text-primary-500 hover:text-primary-700 font-medium transition-colors group whitespace-nowrap"
               >
                 View all
-                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-200" />
+                <ArrowRight
+                  size={14}
+                  className="group-hover:translate-x-1 transition-transform duration-200"
+                />
               </Link>
             </div>
 
