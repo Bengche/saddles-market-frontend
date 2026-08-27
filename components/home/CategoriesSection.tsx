@@ -8,65 +8,44 @@ import { motion } from "framer-motion";
 const categories = [
   {
     name: "Western",
-    href: "/products?category=western-saddles",
+    href: "/products?discipline=western",
     image:
       "https://saddleonlineshop.com/cdn/shop/products/9075PonySS_2.jpg?v=1640371922",
     desc: "Classic comfort for trail and ranch",
   },
   {
     name: "English",
-    href: "/products?category=english-saddles",
+    href: "/products?discipline=english",
     image: "https://i.ebayimg.com/images/g/C7AAAOSwgjxlAEVo/s-l400.jpg",
     desc: "Elegant tradition and performance",
   },
   {
     name: "Dressage",
-    href: "/products?category=dressage-saddles",
+    href: "/products?discipline=dressage",
     image:
       "https://batessaddles.eu/cdn/shop/files/900f5e982bd95b47f29f9206e397d759.png?v=1729221812",
     desc: "Precision for the art of dressage",
   },
   {
     name: "Jumping",
-    href: "/products?category=jumping-saddles",
+    href: "/products?discipline=jumping",
     image:
       "https://oursaddlery.com/wp-content/uploads/2021/05/Jumping_Saddle_Prestige_Paris_Classic_Black_1.jpg",
     desc: "Freedom and security over fences",
   },
   {
     name: "Trail",
-    href: "/products?category=trail-saddles",
+    href: "/products?discipline=trail",
     image:
       "https://farmandranchdepot.com/images/product/KS-Braden-Trail-Saddle-KS2634.jpeg",
     desc: "Built for long-distance adventures",
   },
   {
     name: "Youth",
-    href: "/products?category=youth-saddles",
+    href: "/products?discipline=youth",
     image:
       "https://www.chicksaddlery.com/Merchant2/graphics/00000001/WT5394_271x380_2.jpg",
     desc: "Safe and comfortable for young riders",
-  },
-  {
-    name: "Barrel Racing",
-    href: "/products?category=barrel-racing-saddles",
-    image:
-      "https://www.teskeysaddles.com/images/thumbnails/thumb_4382.jpg",
-    desc: "Built for speed and explosive turns",
-  },
-  {
-    name: "All Purpose",
-    href: "/products?discipline=all_purpose",
-    image:
-      "https://batessaddles.eu/cdn/shop/files/bates-all-purpose-isabell-saddle.jpg",
-    desc: "Versatile saddles for every rider",
-  },
-  {
-    name: "Saddle Accessories",
-    href: "/products?category=saddle-accessories",
-    image:
-      "https://www.chicksaddlery.com/Merchant2/graphics/00000001/CSPA5905-1A.JPG",
-    desc: "Pads, girths, stirrups and more",
   },
 ];
 
