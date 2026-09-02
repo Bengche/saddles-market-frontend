@@ -231,7 +231,10 @@ function OrderDetailDrawer({
 
               {/* Customer */}
               <section>
-                <SectionHeading icon={<User size={14} />} title="Customer Details" />
+                <SectionHeading
+                  icon={<User size={14} />}
+                  title="Customer Details"
+                />
                 <div className="bg-gray-50 rounded-xl p-4 space-y-2 text-sm">
                   <Row
                     label="Name"
@@ -276,7 +279,10 @@ function OrderDetailDrawer({
 
               {/* Payment */}
               <section>
-                <SectionHeading icon={<CreditCard size={14} />} title="Payment" />
+                <SectionHeading
+                  icon={<CreditCard size={14} />}
+                  title="Payment"
+                />
                 <div className="bg-gray-50 rounded-xl p-4 space-y-2 text-sm">
                   <Row
                     label="Method"
@@ -301,7 +307,10 @@ function OrderDetailDrawer({
 
               {/* Items */}
               <section>
-                <SectionHeading icon={<Package size={14} />} title="Items Ordered" />
+                <SectionHeading
+                  icon={<Package size={14} />}
+                  title="Items Ordered"
+                />
                 <div className="border border-gray-200 rounded-xl overflow-hidden">
                   <table className="w-full text-sm">
                     <thead>
@@ -387,7 +396,10 @@ function OrderDetailDrawer({
 
               {/* Shipping address */}
               <section>
-                <SectionHeading icon={<MapPin size={14} />} title="Shipping Address" />
+                <SectionHeading
+                  icon={<MapPin size={14} />}
+                  title="Shipping Address"
+                />
                 <div className="bg-gray-50 rounded-xl p-4 text-sm text-gray-700 leading-relaxed">
                   <p>
                     {order.customer_first_name} {order.customer_last_name}
@@ -423,7 +435,8 @@ function OrderDetailDrawer({
         {order && (
           <div className="px-6 py-4 border-t border-gray-100 bg-gray-50">
             <p className="text-xs text-gray-400 mb-3">
-              Opens your email client — sends directly from your inbox, bypassing automated email.
+              Opens your email client — sends directly from your inbox,
+              bypassing automated email.
             </p>
             <a
               href={mailtoLink}
