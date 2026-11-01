@@ -397,7 +397,7 @@ export default function AiChat() {
         const res = await api.post(
           "/chat",
           { message: text.trim(), history },
-          { timeout: 45000 },
+          { timeout: 70000 },
         );
         const aiMsg: Message = {
           id: crypto.randomUUID(),
