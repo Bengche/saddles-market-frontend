@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Send, Sparkles, ChevronRight, RotateCcw } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import api from "@/lib/api";
+import api, { getErrorMessage } from "@/lib/api";
+import axios from "axios";
 
 interface ProductResult {
   id: string;
@@ -362,10 +363,11 @@ export default function AiChat() {
         .map((m) => ({ role: m.role, content: m.text }));
 
       try {
-        const res = await api.post("/chat", {
-          message: text.trim(),
-          history,
-        });
+        const res = await api.post(
+          "/chat",
+          { message: text.trim(), history },
+          { timeout: 45000 },
+        );
         const aiMsg: Message = {
           id: crypto.randomUUID(),
           role: "assistant",
@@ -374,8 +376,15 @@ export default function AiChat() {
             res.data.products?.length > 0 ? res.data.products : undefined,
         };
         setMessages((prev) => [...prev, aiMsg]);
-      } catch {
-        setError("Something went wrong. Please try again.");
+      } catch (err) {
+        console.error("AI chat request failed:", err);
+        setError(
+          axios.isAxiosError(err) && !err.response
+            ? err.code === "ECONNABORTED"
+              ? "The AI took too long to respond. Please try again."
+              : "Can't reach the server. Check your connection and try again."
+            : getErrorMessage(err),
+        );
         // Remove the user message on error so they can retry
         setMessages((prev) => prev.filter((m) => m.id !== userMsg.id));
       } finally {
