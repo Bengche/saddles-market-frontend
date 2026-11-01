@@ -49,12 +49,6 @@
     }
   }
 
-  img,
-  svg,
-  video {
-    max-width: 100%;
-  }
-
   /* iOS Safari zooms the page on focus when inputs are under 16px */
   @media (max-width: 767px) {
     input:not([type="checkbox"]):not([type="radio"]),
