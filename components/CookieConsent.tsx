@@ -53,7 +53,7 @@ export default function CookieConsent() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 120, opacity: 0 }}
           transition={{ type: "spring", stiffness: 280, damping: 28 }}
-          className="fixed bottom-6 left-2 right-2 md:left-auto md:right-6 max-w-full md:max-w-lg w-full z-[150]"
+          className="fixed bottom-4 left-3 right-3 md:left-auto md:right-6 md:w-full md:max-w-lg z-[150]"
         >
           <div className="bg-white rounded-2xl shadow-luxury-lg border border-gray-100 overflow-hidden">
             {/* Header */}

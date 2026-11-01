@@ -60,7 +60,7 @@ export default function HeroSection() {
             className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-6 break-words"
           >
             Saddles Crafted{" "}
-            <span className="text-gradient-gold italic">for Excellence</span>
+            <span className="text-gradient-gold italic pr-1.5 box-decoration-clone">for Excellence</span>
           </motion.h1>
 
           {/* Sub */}
