@@ -39,6 +39,138 @@ const QUICK_PROMPTS = [
   "Tell me about free shipping",
 ];
 
+const PATH_LABELS: Record<string, string> = {
+  products: "Browse Saddles",
+  product: "View Product",
+  cart: "View Your Cart",
+  checkout: "Go to Checkout",
+  contact: "Contact Us",
+  faq: "Read our FAQ",
+  about: "About Us",
+  blog: "Read our Blog",
+  "why-us": "Why Choose Us",
+  "shipping-policy": "Shipping Policy",
+  "returns-refunds": "Returns & Refunds",
+  "privacy-policy": "Privacy Policy",
+  "terms-conditions": "Terms & Conditions",
+  account: "My Account",
+};
+
+const SITE_HOSTS = ["saddlesmarket.com", "www.saddlesmarket.com"];
+
+// Markdown link | bold | full URL | bare site path such as /products
+const TOKEN_RE = new RegExp(
+  "\\[([^\\]]+)\\]\\(([^)\\s]+)\\)" +
+    "|\\*\\*([^*]+)\\*\\*" +
+    "|(https?:\\/\\/[^\\s<>\"]+)" +
+    "|(\\/(?:" +
+    Object.keys(PATH_LABELS).join("|") +
+    ")(?:\\/[\\w\\-.%]+)*(?:\\?[\\w\\-=&%.]+)?)",
+  "g",
+);
+
+// Resolves a URL to an internal path, an external URL, or null if unsafe
+function resolveHref(
+  raw: string,
+): { href: string; external: boolean } | null {
+  if (raw.startsWith("/") && !raw.startsWith("//")) {
+    return { href: raw, external: false };
+  }
+  try {
+    const url = new URL(raw);
+    if (url.protocol !== "http:" && url.protocol !== "https:") return null;
+    if (SITE_HOSTS.includes(url.hostname)) {
+      return {
+        href: `${url.pathname}${url.search}${url.hash}` || "/",
+        external: false,
+      };
+    }
+    return { href: url.toString(), external: true };
+  } catch {
+    return null;
+  }
+}
+
+function friendlyLabel(raw: string): string {
+  const resolved = resolveHref(raw);
+  if (!resolved) return raw;
+  if (resolved.external) return raw.replace(/^https?:\/\/(www\.)?/, "");
+  const segment = resolved.href.split(/[/?#]/).filter(Boolean)[0];
+  return (segment && PATH_LABELS[segment]) || "Open page";
+}
+
+function MessageText({
+  text,
+  isUser,
+  onNavigate,
+}: {
+  text: string;
+  isUser: boolean;
+  onNavigate: () => void;
+}) {
+  const nodes: React.ReactNode[] = [];
+  let last = 0;
+  let key = 0;
+  const linkClass = isUser
+    ? "underline font-medium text-white"
+    : "underline underline-offset-2 font-medium text-primary-600 hover:text-primary-800";
+
+  const pushLink = (rawUrl: string, label: string) => {
+    const resolved = resolveHref(rawUrl);
+    if (!resolved) {
+      nodes.push(label);
+      return;
+    }
+    nodes.push(
+      resolved.external ? (
+        <a
+          key={key++}
+          href={resolved.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={linkClass}
+        >
+          {label}
+        </a>
+      ) : (
+        <Link
+          key={key++}
+          href={resolved.href}
+          onClick={onNavigate}
+          className={linkClass}
+        >
+          {label}
+        </Link>
+      ),
+    );
+  };
+
+  for (const m of Array.from(text.matchAll(TOKEN_RE))) {
+    const index = m.index ?? 0;
+    if (index > last) nodes.push(text.slice(last, index));
+    let consumed = m[0];
+
+    if (m[1] !== undefined) {
+      pushLink(m[2], m[1]);
+    } else if (m[3] !== undefined) {
+      nodes.push(<strong key={key++}>{m[3]}</strong>);
+    } else if (m[4] !== undefined) {
+      // Keep trailing sentence punctuation outside the link
+      const url = m[4].replace(/[.,;:!?)]+$/, "");
+      pushLink(url, friendlyLabel(url));
+      consumed = url;
+    } else if (m[5] !== undefined) {
+      const path = m[5].replace(/[.,;:!?)]+$/, "");
+      pushLink(path, friendlyLabel(path));
+      consumed = path;
+    }
+    last = index + consumed.length;
+  }
+  if (last < text.length) nodes.push(text.slice(last));
+
+  return <>{nodes}</>;
+}
+
 function TypingIndicator() {
   return (
     <div className="flex justify-start">
@@ -345,13 +477,21 @@ export default function AiChat() {
                     >
                       {/* Bubble */}
                       <div
-                        className={`px-4 py-3 rounded-2xl text-sm leading-relaxed break-words ${
+                        className={`px-4 py-3 rounded-2xl text-sm leading-relaxed break-words whitespace-pre-wrap ${
                           msg.role === "user"
                             ? "bg-[#1C3557] text-white rounded-br-sm"
                             : "bg-white text-gray-800 shadow-sm border border-gray-100 rounded-bl-sm"
                         }`}
                       >
-                        {msg.text}
+                        {msg.role === "assistant" ? (
+                          <MessageText
+                            text={msg.text}
+                            isUser={false}
+                            onNavigate={() => setIsOpen(false)}
+                          />
+                        ) : (
+                          msg.text
+                        )}
                       </div>
 
                       {/* Product cards */}
