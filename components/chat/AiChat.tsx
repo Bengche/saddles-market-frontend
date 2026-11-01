@@ -65,9 +65,12 @@ const TOKEN_RE = new RegExp(
     "|\\*\\*([^*]+)\\*\\*" +
     "|(https?:\\/\\/[^\\s<>\"`]+)" +
     "|\\b((?:www\\.)?saddlesmarket\\.com(?:\\/[\\w\\-./?=&%]*)?)" +
-    "|(^|[\\s(\\[\"'`“])(\\/[a-z][a-z0-9-]*(?:\\/[\\w\\-.%]+)*(?:\\?[\\w\\-=&%.]+)?)",
+    "|(^|[^\\w/.:\\-])(\\/[a-z][a-z0-9-]*(?:\\/[\\w\\-.%]+)*(?:\\?[\\w\\-=&%.]+)?)",
   "g",
 );
+
+const BARE_PATH_RE =
+  /(^|[^\w/.:-])(\/[a-z][a-z0-9-]*(?:\/[\w\-.%]+)*)/g;
 
 const TRAILING_PUNCT = /[.,;:!?)\]'"”]+$/;
 
@@ -160,9 +163,19 @@ function MessageText({
     let consumed = m[0];
 
     if (m[1] !== undefined) {
-      pushLink(m[2], looksLikeUrl(m[1]) ? friendlyLabel(m[2]) : m[1]);
+      const label = looksLikeUrl(m[1])
+        ? friendlyLabel(m[2])
+        : m[1].replace(
+            BARE_PATH_RE,
+            (_all, pre: string, path: string) => pre + friendlyLabel(path),
+          );
+      pushLink(m[2], label);
     } else if (m[3] !== undefined) {
-      nodes.push(<strong key={key++}>{m[3]}</strong>);
+      nodes.push(
+        <strong key={key++}>
+          <MessageText text={m[3]} isUser={isUser} onNavigate={onNavigate} />
+        </strong>,
+      );
     } else if (m[4] !== undefined) {
       // Keep trailing sentence punctuation outside the link
       const url = m[4].replace(TRAILING_PUNCT, "");
