@@ -340,9 +340,13 @@ export default function AiChat() {
         setMobileViewport(null);
         return;
       }
+      // If the page is zoomed, visualViewport values no longer match CSS pixels
+      const zoomed = !!vv && Math.abs(vv.scale - 1) > 0.01;
       setMobileViewport({
-        top: Math.round(vv?.offsetTop ?? 0),
-        height: Math.round(vv?.height ?? window.innerHeight),
+        top: zoomed ? 0 : Math.round(vv?.offsetTop ?? 0),
+        height: zoomed
+          ? window.innerHeight
+          : Math.round(vv?.height ?? window.innerHeight),
       });
     };
     update();

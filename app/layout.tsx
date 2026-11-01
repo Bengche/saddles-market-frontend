@@ -67,6 +67,8 @@ export const viewport: Viewport = {
   themeColor: SITE_CONFIG.pwa.themeColor,
   width: "device-width",
   initialScale: 1,
+  // Stops iOS Safari from zooming the page when a text field is focused
+  maximumScale: 1,
 };
 
 export default function RootLayout({
