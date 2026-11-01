@@ -59,16 +59,17 @@ const PATH_LABELS: Record<string, string> = {
 
 const SITE_HOSTS = ["saddlesmarket.com", "www.saddlesmarket.com"];
 
-// Markdown link | bold | full URL | bare site path such as /products
+// Markdown link | bold | full URL | bare domain | bare site path such as /contact
 const TOKEN_RE = new RegExp(
   "\\[([^\\]]+)\\]\\(([^)\\s]+)\\)" +
     "|\\*\\*([^*]+)\\*\\*" +
-    "|(https?:\\/\\/[^\\s<>\"]+)" +
-    "|(\\/(?:" +
-    Object.keys(PATH_LABELS).join("|") +
-    ")(?:\\/[\\w\\-.%]+)*(?:\\?[\\w\\-=&%.]+)?)",
+    "|(https?:\\/\\/[^\\s<>\"`]+)" +
+    "|\\b((?:www\\.)?saddlesmarket\\.com(?:\\/[\\w\\-./?=&%]*)?)" +
+    "|(^|[\\s(\\[\"'`“])(\\/[a-z][a-z0-9-]*(?:\\/[\\w\\-.%]+)*(?:\\?[\\w\\-=&%.]+)?)",
   "g",
 );
+
+const TRAILING_PUNCT = /[.,;:!?)\]'"”]+$/;
 
 // Resolves a URL to an internal path, an external URL, or null if unsafe
 function resolveHref(
@@ -97,8 +98,15 @@ function friendlyLabel(raw: string): string {
   if (!resolved) return raw;
   if (resolved.external) return raw.replace(/^https?:\/\/(www\.)?/, "");
   const segment = resolved.href.split(/[/?#]/).filter(Boolean)[0];
-  return (segment && PATH_LABELS[segment]) || "Open page";
+  if (!segment) return "Visit our Home Page";
+  if (PATH_LABELS[segment]) return PATH_LABELS[segment];
+  const words = segment.replace(/-/g, " ");
+  return words.charAt(0).toUpperCase() + words.slice(1);
 }
+
+// A label that is itself a path or URL (e.g. "/contact") is not readable
+const looksLikeUrl = (label: string) =>
+  /^(\/|https?:\/\/|(www\.)?saddlesmarket\.com)/i.test(label.trim());
 
 function MessageText({
   text,
@@ -152,18 +160,28 @@ function MessageText({
     let consumed = m[0];
 
     if (m[1] !== undefined) {
-      pushLink(m[2], m[1]);
+      pushLink(m[2], looksLikeUrl(m[1]) ? friendlyLabel(m[2]) : m[1]);
     } else if (m[3] !== undefined) {
       nodes.push(<strong key={key++}>{m[3]}</strong>);
     } else if (m[4] !== undefined) {
       // Keep trailing sentence punctuation outside the link
-      const url = m[4].replace(/[.,;:!?)]+$/, "");
+      const url = m[4].replace(TRAILING_PUNCT, "");
       pushLink(url, friendlyLabel(url));
       consumed = url;
     } else if (m[5] !== undefined) {
-      const path = m[5].replace(/[.,;:!?)]+$/, "");
+      const domain = m[5].replace(TRAILING_PUNCT, "");
+      const url = `https://${domain}`;
+      pushLink(url, friendlyLabel(url));
+      consumed = domain;
+    } else if (m[7] !== undefined) {
+      const path = m[7].replace(TRAILING_PUNCT, "");
+      // Drop a backtick wrapper such as `/contact`
+      if (m[6] !== "`") nodes.push(m[6]);
       pushLink(path, friendlyLabel(path));
-      consumed = path;
+      consumed = m[6] + path;
+      if (m[6] === "`" && text[index + consumed.length] === "`") {
+        consumed += "`";
+      }
     }
     last = index + consumed.length;
   }
