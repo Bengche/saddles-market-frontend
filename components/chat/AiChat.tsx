@@ -312,10 +312,12 @@ export default function AiChat() {
   const inputRef = useRef<HTMLInputElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  // Scroll to bottom on new messages
+  // Scroll to bottom on new messages. Scrolls only the message list:
+  // scrollIntoView would also shift the whole page on iOS.
   useEffect(() => {
     if (isOpen) {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      const list = messagesEndRef.current?.parentElement;
+      list?.scrollTo({ top: list.scrollHeight, behavior: "smooth" });
     }
   }, [messages, loading, isOpen]);
 
@@ -339,8 +341,8 @@ export default function AiChat() {
         return;
       }
       setMobileViewport({
-        top: vv?.offsetTop ?? 0,
-        height: vv?.height ?? window.innerHeight,
+        top: Math.round(vv?.offsetTop ?? 0),
+        height: Math.round(vv?.height ?? window.innerHeight),
       });
     };
     update();
@@ -354,15 +356,34 @@ export default function AiChat() {
     };
   }, [isOpen]);
 
-  // Lock page scroll behind the full-screen sheet on mobile
+  // Lock the page behind the full-screen sheet. position: fixed is the only
+  // reliable way to stop iOS Safari from panning the page when the keyboard opens.
+  const sheetActive = !!mobileViewport;
   useEffect(() => {
-    if (!isOpen || !mobileViewport) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = prev;
+    if (!isOpen || !sheetActive) return;
+    const scrollY = window.scrollY;
+    const body = document.body;
+    const prev = {
+      position: body.style.position,
+      top: body.style.top,
+      left: body.style.left,
+      right: body.style.right,
+      width: body.style.width,
     };
-  }, [isOpen, !!mobileViewport]);
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.width = "100%";
+    return () => {
+      body.style.position = prev.position;
+      body.style.top = prev.top;
+      body.style.left = prev.left;
+      body.style.right = prev.right;
+      body.style.width = prev.width;
+      window.scrollTo(0, scrollY);
+    };
+  }, [isOpen, sheetActive]);
 
   // Focus input when panel opens (desktop only: avoids the keyboard popping up on touch devices)
   useEffect(() => {
