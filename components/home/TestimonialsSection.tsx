@@ -91,11 +91,11 @@ export default function TestimonialsSection() {
               <p className="text-white/85 text-base leading-relaxed mb-6 italic">
                 &ldquo;{t.quote}&rdquo;
               </p>
-              <div className="flex items-center gap-4">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
                 <div className="w-11 h-11 rounded-full bg-gold-400 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                   {t.initials}
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 min-w-[10rem]">
                   <p className="font-semibold text-white text-sm">{t.name}</p>
                   <p className="text-white/55 text-xs">
                     {t.role} — {t.location}

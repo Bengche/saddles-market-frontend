@@ -18,7 +18,7 @@ export default function HeroSection() {
   return (
     <section
       ref={ref}
-      className="relative min-h-screen flex items-center overflow-hidden bg-primary-900"
+      className="relative min-h-screen min-h-[100svh] flex items-center overflow-hidden bg-primary-900"
     >
       {/* Parallax background */}
       <motion.div className="absolute inset-0" style={{ y: bgY }}>
@@ -57,7 +57,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.35, duration: 0.8 }}
-            className="font-serif text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-6"
+            className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-6 break-words"
           >
             Saddles Crafted{" "}
             <span className="text-gradient-gold italic">for Excellence</span>

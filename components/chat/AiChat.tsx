@@ -155,9 +155,54 @@ export default function AiChat() {
     }
   }, [messages, loading, isOpen]);
 
-  // Focus input when panel opens
+  // Mobile: the panel becomes a full-screen sheet that tracks the visual
+  // viewport so the iOS keyboard never covers the input.
+  const [mobileViewport, setMobileViewport] = useState<{
+    top: number;
+    height: number;
+  } | null>(null);
+
   useEffect(() => {
-    if (isOpen) {
+    if (!isOpen) {
+      setMobileViewport(null);
+      return;
+    }
+    const mq = window.matchMedia("(max-width: 639px)");
+    const vv = window.visualViewport;
+    const update = () => {
+      if (!mq.matches) {
+        setMobileViewport(null);
+        return;
+      }
+      setMobileViewport({
+        top: vv?.offsetTop ?? 0,
+        height: vv?.height ?? window.innerHeight,
+      });
+    };
+    update();
+    vv?.addEventListener("resize", update);
+    vv?.addEventListener("scroll", update);
+    window.addEventListener("resize", update);
+    return () => {
+      vv?.removeEventListener("resize", update);
+      vv?.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [isOpen]);
+
+  // Lock page scroll behind the full-screen sheet on mobile
+  useEffect(() => {
+    if (!isOpen || !mobileViewport) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [isOpen, !!mobileViewport]);
+
+  // Focus input when panel opens (desktop only: avoids the keyboard popping up on touch devices)
+  useEffect(() => {
+    if (isOpen && window.matchMedia("(min-width: 640px)").matches) {
       setTimeout(() => inputRef.current?.focus(), 250);
     }
   }, [isOpen]);
@@ -232,11 +277,19 @@ export default function AiChat() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.97 }}
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed bottom-[88px] right-4 sm:right-6 z-50 flex flex-col bg-white rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.18)] overflow-hidden"
-            style={{
-              width: "min(400px, calc(100vw - 2rem))",
-              height: "min(580px, calc(100svh - 110px))",
-            }}
+            className={`fixed z-50 flex flex-col bg-white shadow-[0_24px_60px_rgba(0,0,0,0.18)] overflow-hidden ${
+              mobileViewport
+                ? "left-0 right-0 w-full rounded-none"
+                : "bottom-[88px] right-4 sm:right-6 rounded-2xl"
+            }`}
+            style={
+              mobileViewport
+                ? { top: mobileViewport.top, height: mobileViewport.height }
+                : {
+                    width: "min(400px, calc(100% - 2rem))",
+                    height: "min(580px, calc(100dvh - 110px))",
+                  }
+            }
           >
             {/* Header */}
             <div className="flex items-center justify-between gap-3 px-5 py-3.5 bg-[#0f2340] flex-shrink-0">
@@ -276,7 +329,7 @@ export default function AiChat() {
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3 bg-gray-50/60">
+            <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain px-4 py-4 space-y-3 bg-gray-50/60">
               <AnimatePresence initial={false}>
                 {messages.map((msg) => (
                   <motion.div
@@ -287,12 +340,12 @@ export default function AiChat() {
                     className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                   >
                     <div
-                      className={`space-y-2 ${msg.role === "user" ? "items-end" : "items-start"} flex flex-col`}
+                      className={`space-y-2 min-w-0 ${msg.role === "user" ? "items-end" : "items-start"} flex flex-col`}
                       style={{ maxWidth: "88%" }}
                     >
                       {/* Bubble */}
                       <div
-                        className={`px-4 py-3 rounded-2xl text-sm leading-relaxed ${
+                        className={`px-4 py-3 rounded-2xl text-sm leading-relaxed break-words ${
                           msg.role === "user"
                             ? "bg-[#1C3557] text-white rounded-br-sm"
                             : "bg-white text-gray-800 shadow-sm border border-gray-100 rounded-bl-sm"
@@ -362,16 +415,16 @@ export default function AiChat() {
             </div>
 
             {/* Input */}
-            <div className="flex-shrink-0 px-3 pt-2.5 pb-3 border-t border-gray-100 bg-white">
+            <div className="flex-shrink-0 px-3 pt-2.5 pb-[max(0.75rem,env(safe-area-inset-bottom))] border-t border-gray-100 bg-white">
               <form onSubmit={handleSubmit} className="flex items-center gap-2">
-                <div className="flex-1 flex items-center bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 focus-within:border-[#1C3557]/40 focus-within:ring-2 focus-within:ring-[#1C3557]/10 transition-all">
+                <div className="flex-1 min-w-0 flex items-center bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 focus-within:border-[#1C3557]/40 focus-within:ring-2 focus-within:ring-[#1C3557]/10 transition-all">
                   <input
                     ref={inputRef}
                     type="text"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Ask about saddles, sizing, shipping…"
-                    className="flex-1 bg-transparent text-sm text-gray-800 placeholder-gray-400 outline-none"
+                    className="flex-1 min-w-0 bg-transparent text-base sm:text-sm text-gray-800 placeholder-gray-400 outline-none"
                     disabled={loading}
                     maxLength={500}
                     autoComplete="off"
@@ -398,8 +451,7 @@ export default function AiChat() {
       <motion.button
         key="chat-trigger"
         onClick={() => setIsOpen((v) => !v)}
-        className="fixed bottom-5 right-4 sm:right-6 z-50 flex items-center gap-2.5 bg-[#0f2340] hover:bg-[#16293f] text-white rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.22)] transition-colors overflow-hidden"
-        style={{ padding: isOpen ? "11px 16px" : "11px 20px" }}
+        className={`fixed bottom-5 right-4 sm:right-6 z-50 ${isOpen ? "max-sm:hidden" : ""} flex items-center gap-2.5 bg-[#0f2340] hover:bg-[#16293f] text-white rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.22)]         transition-colors overflow-hidden`}        style={{ padding: isOpen ? "11px 16px" : "11px 20px" }}
         whileHover={{ scale: 1.03 }}
         whileTap={{ scale: 0.96 }}
         aria-label={isOpen ? "Close AI chat" : "Open AI chat"}

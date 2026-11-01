@@ -85,7 +85,7 @@ export default function RootLayout({
             <CartProvider>
               <FavoritesProvider>
                 <Header />
-                <main id="main-content" tabIndex={-1}>
+                <main id="main-content" tabIndex={-1} className="overflow-x-clip">
                   {children}
                 </main>
                 <Footer />
