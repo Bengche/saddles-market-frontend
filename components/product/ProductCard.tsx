@@ -150,7 +150,7 @@ export default function ProductCard({ product, className }: ProductCardProps) {
 
         {/* Price row + add-to-cart */}
         <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
-          <div className="flex items-baseline gap-2">
+          <div className="flex flex-wrap items-baseline gap-x-2 min-w-0">
             <span className="text-xl font-extrabold text-gray-900">
               {formatPrice(product.price)}
             </span>
