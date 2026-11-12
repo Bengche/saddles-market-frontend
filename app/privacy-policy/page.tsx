@@ -96,7 +96,7 @@ export default function PrivacyPolicyPage() {
               address, phone).
             </li>
             <li>
-              <strong>Email service providers</strong> (SendGrid) to send
+              <strong>Email service providers</strong> (Hostinger) to send
               transactional and marketing emails.
             </li>
             <li>
