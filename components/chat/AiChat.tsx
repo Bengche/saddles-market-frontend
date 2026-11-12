@@ -325,6 +325,8 @@ export default function AiChat() {
   // viewport so the iOS keyboard never covers the input.
   const [mobileViewport, setMobileViewport] = useState<{
     top: number;
+    left: number;
+    width: number;
     height: number;
   } | null>(null);
 
@@ -342,8 +344,13 @@ export default function AiChat() {
       }
       // If the page is zoomed, visualViewport values no longer match CSS pixels
       const zoomed = !!vv && Math.abs(vv.scale - 1) > 0.01;
+      const fallbackWidth = document.documentElement.clientWidth;
       setMobileViewport({
         top: zoomed ? 0 : Math.round(vv?.offsetTop ?? 0),
+        left: zoomed ? 0 : Math.round(vv?.offsetLeft ?? 0),
+        width: zoomed
+          ? fallbackWidth
+          : Math.round(vv?.width ?? fallbackWidth),
         height: zoomed
           ? window.innerHeight
           : Math.round(vv?.height ?? window.innerHeight),
@@ -360,32 +367,28 @@ export default function AiChat() {
     };
   }, [isOpen]);
 
-  // Lock the page behind the full-screen sheet. position: fixed is the only
-  // reliable way to stop iOS Safari from panning the page when the keyboard opens.
+  // Lock background scrolling without position: fixed on body. On iOS Safari,
+  // a fixed body plus the keyboard can widen/shift the page and leave the
+  // homepage misaligned after the chat closes.
   const sheetActive = !!mobileViewport;
   useEffect(() => {
     if (!isOpen || !sheetActive) return;
-    const scrollY = window.scrollY;
+    const html = document.documentElement;
     const body = document.body;
     const prev = {
-      position: body.style.position,
-      top: body.style.top,
-      left: body.style.left,
-      right: body.style.right,
-      width: body.style.width,
+      htmlOverflow: html.style.overflow,
+      bodyOverflow: body.style.overflow,
+      bodyOverscroll: body.style.overscrollBehavior,
     };
-    body.style.position = "fixed";
-    body.style.top = `-${scrollY}px`;
-    body.style.left = "0";
-    body.style.right = "0";
-    body.style.width = "100%";
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    body.style.overscrollBehavior = "none";
     return () => {
-      body.style.position = prev.position;
-      body.style.top = prev.top;
-      body.style.left = prev.left;
-      body.style.right = prev.right;
-      body.style.width = prev.width;
-      window.scrollTo(0, scrollY);
+      html.style.overflow = prev.htmlOverflow;
+      body.style.overflow = prev.bodyOverflow;
+      body.style.overscrollBehavior = prev.bodyOverscroll;
+      // Undo any sideways pan iOS applied while the keyboard was open
+      if (window.scrollX !== 0) window.scrollTo(0, window.scrollY);
     };
   }, [isOpen, sheetActive]);
 
@@ -476,12 +479,18 @@ export default function AiChat() {
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
             className={`fixed z-50 flex flex-col bg-white shadow-[0_24px_60px_rgba(0,0,0,0.18)] overflow-hidden ${
               mobileViewport
-                ? "left-0 right-0 w-full rounded-none"
+                ? "rounded-none"
                 : "bottom-[88px] right-4 sm:right-6 rounded-2xl"
             }`}
             style={
               mobileViewport
-                ? { top: mobileViewport.top, height: mobileViewport.height }
+                ? {
+                    top: mobileViewport.top,
+                    left: mobileViewport.left,
+                    width: mobileViewport.width,
+                    maxWidth: "100vw",
+                    height: mobileViewport.height,
+                  }
                 : {
                     width: "min(400px, calc(100% - 2rem))",
                     height: "min(580px, calc(100dvh - 110px))",
